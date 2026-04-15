@@ -12,31 +12,26 @@ Key Features
 📈 Visualization-ready output for reporting
 
 # 🌱 Agricultural Monitoring System Architecture
+from detect import run_detection
+from preprocess import preprocess_image
+from postprocess import generate_report
 
-flowchart TD
+def run_pipeline(image_path):
+    print("Starting pipeline...")
 
-A[360 Cameras / Drones / Sensors] --> B[Edge Processing]
-B --> C[Data Ingestion]
-C --> D[Preprocessing Layer]
+    # Step 1: Preprocess
+    clean_image = preprocess_image(image_path)
 
-D --> E[YOLOv8 Object Detection]
-D --> F[Crop Health Classification]
+    # Step 2: Detection (YOLOv8)
+    detections = run_detection(clean_image)
 
-E --> G[Feature Extraction]
-F --> G
+    # Step 3: Post-processing
+    report = generate_report(detections)
 
-G --> H[Analytics Engine]
-H --> I[Yield Prediction]
-H --> J[Anomaly Detection]
+    print("Pipeline completed")
+    return report
 
-I --> K[GIS Mapping Layer]
-J --> K
 
-K --> L[Path Planning Module]
-K --> M[Heatmap Generation]
-
-L --> N[Farmer Dashboard]
-M --> N
-
-N --> O[Street View Visualization]
-N --> P[Reports & Alerts]
+if __name__ == "__main__":
+    result = run_pipeline("data/input_images/field.jpg")
+    print(result)

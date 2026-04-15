@@ -1,0 +1,10 @@
+path: dataset
+train: train/images
+val: valid/images
+test: test/images
+
+nc: 3
+names:
+  0: healthy_crop
+  1: stressed_crop
+  2: diseased_crop

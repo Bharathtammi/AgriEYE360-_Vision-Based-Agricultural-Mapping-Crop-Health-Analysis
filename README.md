@@ -1,3 +1,8 @@
+This project implements a computer vision-based agricultural monitoring system using YOLOv8 for real-time object detection and crop analysis.
+
+The system is designed to assist farmers and agricultural analysts by automating field monitoring, identifying crop conditions, and generating structured insights from visual data.
+
+It transforms raw field images into actionable information such as crop health status, anomaly detection, and productivity estimation.
 # 🌱 Agricultural Monitoring System Architecture
 
 ## 📊 Architecture Diagram

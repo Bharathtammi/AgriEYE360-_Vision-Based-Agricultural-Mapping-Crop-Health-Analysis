@@ -15,57 +15,28 @@ Key Features
 
 flowchart TD
 
-%% ================= INPUT LAYER =================
-A1[360° Cameras / Drones / Field Sensors]
-A2[GPS Data / Satellite Imagery]
+A[360 Cameras / Drones / Sensors] --> B[Edge Processing]
+B --> C[Data Ingestion]
+C --> D[Preprocessing Layer]
 
-%% ================= EDGE LAYER =================
-B1[Edge Device Processing]
-B2[Frame Extraction & Compression]
+D --> E[YOLOv8 Object Detection]
+D --> F[Crop Health Classification]
 
-%% ================= DATA PIPELINE =================
-C1[Data Ingestion Layer]
-C2[Data Preprocessing]
-C3[Data Synchronization & Cleaning]
+E --> G[Feature Extraction]
+F --> G
 
-%% ================= AI / ML LAYER =================
-D1[YOLOv8 Object Detection]
-D2[Crop Health Classification Model]
-D3[Feature Extraction Engine]
+G --> H[Analytics Engine]
+H --> I[Yield Prediction]
+H --> J[Anomaly Detection]
 
-%% ================= ANALYTICS LAYER =================
-E1[Field Condition Analysis]
-E2[Yield Prediction Engine]
-E3[Anomaly Detection System]
+I --> K[GIS Mapping Layer]
+J --> K
 
-%% ================= SPATIAL INTELLIGENCE =================
-F1[GIS Mapping Layer]
-F2[Path Planning Module (GPS Routing)]
-F3[Field Heatmap Generation]
+K --> L[Path Planning Module]
+K --> M[Heatmap Generation]
 
-%% ================= OUTPUT LAYER =================
-G1[Farmer Dashboard]
-G2[Real-Time Alerts & Reports]
-G3[Street-View Field Visualization]
+L --> N[Farmer Dashboard]
+M --> N
 
-%% ================= CONNECTIONS =================
-A1 --> B1
-A2 --> C1
-
-B1 --> B2 --> C1
-C1 --> C2 --> C3
-
-C3 --> D1
-C3 --> D2
-D1 --> D3
-D2 --> D3
-
-D3 --> E1 --> E2 --> E3
-
-E1 --> F1
-E2 --> F1
-E3 --> F3
-
-F1 --> F2 --> G1
-F2 --> G3
-F3 --> G2
+N --> O[Street View Visualization]
+N --> P[Reports & Alerts]

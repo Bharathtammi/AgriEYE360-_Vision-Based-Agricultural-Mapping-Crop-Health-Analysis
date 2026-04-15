@@ -12,6 +12,7 @@ Key Features
 📈 Visualization-ready output for reporting
 
 # 🌱 Agricultural Monitoring System Architecture
+
 flowchart TD
 
 %% ================= INPUT LAYER =================
@@ -68,4 +69,3 @@ E3 --> F3
 F1 --> F2 --> G1
 F2 --> G3
 F3 --> G2
-

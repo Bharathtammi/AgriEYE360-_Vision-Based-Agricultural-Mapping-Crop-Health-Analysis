@@ -1,6 +1,7 @@
 # AgriEYE360: Vision-Based Agricultural Mapping & Crop Health Analysis
 
 AgriEYE360 is an end-to-end computer vision project for agricultural field monitoring that combines 360° image understanding, crop health detection, and navigation-oriented field mapping into a single workflow. The repository is built in Python, includes a dataset folder, and centers on a real-world corn-field monitoring use case with YOLOv8-based analysis.[1]
+<img width="314" height="275" alt="image" src="https://github.com/user-attachments/assets/e818e8bb-1a54-4f5c-a4ed-59d6e45ab6f1" />
 
 ## Overview
 

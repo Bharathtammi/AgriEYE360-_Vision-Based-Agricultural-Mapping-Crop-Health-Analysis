@@ -1,0 +1,2 @@
+dataset/field_360/*.jpg filter=lfs diff=lfs merge=lfs -text
+dataset/field_360/*.JPG filter=lfs diff=lfs merge=lfs -text

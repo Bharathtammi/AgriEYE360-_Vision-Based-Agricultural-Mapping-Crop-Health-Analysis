@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Streetview Tour Builder</title>
+  <meta name="description" content="Build a Street View-style tour from a group of 360 panoramas directly in the browser." />
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cabinet-grotesk@500,700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marzipano@0.10.2/dist/marzipano.js" defer></script>
+  <style>
+    :root, [data-theme="light"] {--text-xs:clamp(.75rem,.7rem + .25vw,.875rem);--text-sm:clamp(.875rem,.8rem + .35vw,1rem);--text-base:clamp(1rem,.95rem + .25vw,1.125rem);--text-lg:clamp(1.125rem,1rem + .75vw,1.5rem);--text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);--space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;--space-12:3rem;--space-16:4rem;--color-bg:#f7f6f2;--color-surface:#f9f8f5;--color-surface-2:#fbfbf9;--color-surface-offset:#f3f0ec;--color-border:#d4d1ca;--color-text:#28251d;--color-text-muted:#66645f;--color-text-faint:#9e9b95;--color-text-inverse:#f9f8f4;--color-primary:#01696f;--color-primary-hover:#0c4e54;--color-primary-active:#0f3638;--radius-sm:.375rem;--radius-md:.5rem;--radius-lg:.75rem;--radius-xl:1rem;--radius-full:9999px;--shadow-sm:0 1px 2px oklch(0.2 0.01 80 / .06);--shadow-md:0 8px 24px oklch(0.2 0.01 80 / .09);--transition:180ms cubic-bezier(.16,1,.3,1);--font-display:'Cabinet Grotesk','Inter',sans-serif;--font-body:'Satoshi','Inter',sans-serif;--content-wide:1400px}
+    [data-theme="dark"] {--color-bg:#171614;--color-surface:#1c1b19;--color-surface-2:#201f1d;--color-surface-offset:#1d1c1a;--color-border:#393836;--color-text:#e6e2da;--color-text-muted:#ada89e;--color-text-faint:#706b63;--color-text-inverse:#171614;--color-primary:#4f98a3;--color-primary-hover:#66a8b2;--color-primary-active:#1a626b;--shadow-sm:0 1px 2px oklch(0 0 0 / .2);--shadow-md:0 8px 24px oklch(0 0 0 / .32)}
+    *,:before,:after{box-sizing:border-box;margin:0;padding:0} html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth} body{min-height:100dvh;font-family:var(--font-body);font-size:var(--text-base);line-height:1.6;color:var(--color-text);background:radial-gradient(circle at top right,color-mix(in oklab,var(--color-primary) 8%, transparent),transparent 28%),linear-gradient(180deg,var(--color-bg),var(--color-surface-2))} button,input,select,textarea{font:inherit;color:inherit} button{cursor:pointer;border:none;background:none} img,svg{display:block;max-width:100%;height:auto} h1,h2,h3{line-height:1.08} p{color:var(--color-text-muted)} :focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:var(--radius-sm)}
+    .shell{max-width:var(--content-wide);margin:0 auto;padding:var(--space-4);display:grid;gap:var(--space-6)} .topbar{display:flex;justify-content:space-between;align-items:center;gap:var(--space-4)} .brand{display:flex;align-items:center;gap:var(--space-3)} .brand-mark{width:2.75rem;height:2.75rem;border-radius:var(--radius-lg);display:grid;place-items:center;background:linear-gradient(145deg,var(--color-surface-2),var(--color-surface-offset));border:1px solid color-mix(in oklab,var(--color-text) 12%, transparent)} .brand-mark svg{width:1.6rem;height:1.6rem;color:var(--color-primary)} .brand-copy strong{display:block;font-family:var(--font-display);font-size:var(--text-lg)} .brand-copy span{font-size:var(--text-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--color-text-muted)}
+    .btn,.btn-secondary,.toggle,.tiny-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);min-height:44px;padding:0 var(--space-4);border-radius:var(--radius-full);transition:background var(--transition),transform var(--transition),border-color var(--transition),opacity var(--transition)} .btn{background:var(--color-primary);color:var(--color-text-inverse)} .btn:hover{background:var(--color-primary-hover);transform:translateY(-1px)} .btn-secondary,.toggle,.tiny-btn{border:1px solid color-mix(in oklab,var(--color-text) 10%, transparent);background:color-mix(in oklab,var(--color-surface) 90%, transparent)} .btn-secondary:hover,.toggle:hover,.tiny-btn:hover{background:var(--color-surface-offset);transform:translateY(-1px)} .tiny-btn{min-height:36px;padding:0 var(--space-3)} .btn[disabled],.btn-secondary[disabled]{opacity:.5;cursor:not-allowed;transform:none}
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:var(--space-6)} .panel{background:color-mix(in oklab,var(--color-surface) 94%, transparent);border:1px solid color-mix(in oklab,var(--color-text) 10%, transparent);border-radius:var(--radius-xl);box-shadow:var(--shadow-md)} .hero-copy,.hero-side,.card{padding:var(--space-5)} .eyebrow{font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.16em;color:var(--color-primary);font-weight:700} h1{font-family:var(--font-display);font-size:var(--text-xl);margin-top:var(--space-3)} .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3);margin-top:var(--space-5)} .metric{padding:var(--space-4);border-radius:var(--radius-lg);background:var(--color-surface-2);border:1px solid color-mix(in oklab,var(--color-text) 8%, transparent)} .metric span{display:block;font-size:var(--text-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-muted)} .metric strong{font-family:var(--font-display);font-size:var(--text-lg)} .hero-side ul{list-style:none;display:grid;gap:var(--space-3)} .hero-side li{padding:var(--space-4);border-radius:var(--radius-lg);background:linear-gradient(180deg,var(--color-surface-2),var(--color-surface-offset));border:1px solid color-mix(in oklab,var(--color-text) 8%, transparent)} .hero-side strong{display:block;margin-bottom:var(--space-1);color:var(--color-text)}
+    .workspace{display:grid;grid-template-columns:340px minmax(0,1fr) 320px;gap:var(--space-5);align-items:start} .stack{display:grid;gap:var(--space-5)} .card h2{font-size:var(--text-lg);font-family:var(--font-display);margin-bottom:var(--space-2)} .dropzone{margin-top:var(--space-4);display:grid;place-items:center;text-align:center;gap:var(--space-3);padding:var(--space-8);border:1.5px dashed color-mix(in oklab,var(--color-primary) 35%, var(--color-border));border-radius:var(--radius-xl);background:linear-gradient(180deg,color-mix(in oklab,var(--color-primary) 4%, var(--color-surface-2)),var(--color-surface));min-height:190px} .dropzone.dragover{border-color:var(--color-primary);background:linear-gradient(180deg,color-mix(in oklab,var(--color-primary) 11%, var(--color-surface-2)),var(--color-surface-offset))} .file-input{position:absolute;inline-size:1px;block-size:1px;opacity:0} .scene-list{display:grid;gap:var(--space-3);margin-top:var(--space-4);max-height:520px;overflow:auto;padding-right:var(--space-1)} .scene-item{display:grid;grid-template-columns:72px 1fr auto;gap:var(--space-3);align-items:center;padding:var(--space-3);border-radius:var(--radius-lg);background:var(--color-surface-2);border:1px solid transparent} .scene-item.active{border-color:var(--color-primary);background:color-mix(in oklab,var(--color-primary) 8%, var(--color-surface-2))} .scene-thumb{width:72px;height:48px;border-radius:var(--radius-md);overflow:hidden;background:var(--color-surface-offset)} .scene-thumb img{width:100%;height:100%;object-fit:cover} .scene-meta strong{display:block;font-size:var(--text-sm);color:var(--color-text)} .scene-meta span{font-size:var(--text-xs);color:var(--color-text-muted)}
+    .viewer-stage{position:relative;min-height:560px;background:#111;border-radius:calc(var(--radius-xl) - 2px);overflow:hidden} #pano{position:absolute;inset:0} .viewer-empty{position:absolute;inset:0;display:grid;place-items:center;padding:var(--space-6);text-align:center;color:#faf7f0;background:linear-gradient(180deg,rgba(1,105,111,.25),rgba(0,0,0,.55))} .viewer-hud{position:absolute;left:var(--space-4);right:var(--space-4);bottom:var(--space-4);display:flex;justify-content:space-between;gap:var(--space-3);pointer-events:none} .hud-card{pointer-events:auto;padding:var(--space-3) var(--space-4);border-radius:var(--radius-lg);background:rgba(20,20,20,.58);backdrop-filter:blur(14px);color:#fff;border:1px solid rgba(255,255,255,.12)} .hotspot{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(1,105,111,.95);color:#fff;border:2px solid rgba(255,255,255,.85);box-shadow:0 10px 26px rgba(0,0,0,.25)} .hotspot svg{width:18px;height:18px}
+    .fields{display:grid;gap:var(--space-4);margin-top:var(--space-4)} .field{display:grid;gap:var(--space-2)} .field label{font-size:var(--text-sm);font-weight:700;color:var(--color-text)} .input,.select,textarea{min-height:46px;padding:0 var(--space-3);border-radius:var(--radius-md);border:1px solid color-mix(in oklab,var(--color-text) 12%, transparent);background:var(--color-surface-2)} textarea{padding-block:var(--space-3);min-height:92px;resize:vertical} input[type='range']{width:100%;accent-color:var(--color-primary)} .range-head{display:flex;justify-content:space-between;gap:var(--space-3);font-size:var(--text-sm)} .tag{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-3);border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:700;background:color-mix(in oklab,var(--color-primary) 10%, var(--color-surface));color:var(--color-primary)} .link-grid{display:grid;gap:var(--space-3);margin-top:var(--space-4)} .link-row{display:grid;grid-template-columns:1fr 88px 88px auto;gap:var(--space-2);align-items:center} .status{margin-top:var(--space-4);padding:var(--space-3) var(--space-4);border-radius:var(--radius-lg);background:var(--color-surface-offset);font-size:var(--text-sm);color:var(--color-text-muted)} .status strong{color:var(--color-text)} .insights{display:grid;gap:var(--space-3);margin-top:var(--space-4)} .insight{padding:var(--space-4);border-radius:var(--radius-lg);background:var(--color-surface-2);border:1px solid color-mix(in oklab,var(--color-text) 8%, transparent);color:var(--color-text-muted)}
+    @media (max-width:1220px){.workspace{grid-template-columns:320px 1fr}.side{grid-column:1/-1}} @media (max-width:960px){.hero,.workspace,.metrics,.link-row{grid-template-columns:1fr}.viewer-stage{min-height:420px}} @media (max-width:640px){.topbar{flex-direction:column;align-items:flex-start}.viewer-stage{min-height:340px}.viewer-hud{position:static;padding:var(--space-4);background:#121212;display:grid}.hero-copy,.hero-side,.card{padding:var(--space-4)}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="14" width="48" height="36" rx="18" stroke="currentColor" stroke-width="4"/><circle cx="24" cy="32" r="5" fill="currentColor"/><circle cx="40" cy="32" r="5" fill="currentColor"/><path d="M16 32C24 23 40 23 48 32" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg></span>
+        <span class="brand-copy"><strong>Streetview Tour Builder</strong><span>Batch 360 scenes to linked tour</span></span>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="toggle" type="button" id="themeToggle">◐</button>
+        <button class="btn-secondary" type="button" id="demoBtn">Load demo scenes</button>
+        <button class="btn" type="button" id="exportJsonBtn" disabled>Export tour JSON</button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <section class="panel hero-copy">
+        <span class="eyebrow">Fixed builder</span>
+        <h1>Upload a group of 360 images, connect the scenes, and preview the tour live.</h1>
+        <p>This version fixes the editor loop so uploads, selection, preview, and linking all work together instead of stalling on latitude and longitude fields.</p>
+        <div class="metrics">
+          <article class="metric"><span>Scenes</span><strong id="sceneCountMetric">0 scenes</strong></article>
+          <article class="metric"><span>Links</span><strong id="linkCountMetric">0 links</strong></article>
+          <article class="metric"><span>Preview</span><strong>Working</strong></article>
+        </div>
+      </section>
+      <aside class="panel hero-side">
+        <ul>
+          <li><strong>Batch import</strong><span>One panorama becomes one scene.</span></li>
+          <li><strong>Live preview</strong><span>Linked hotspots navigate between scenes in-browser.</span></li>
+          <li><strong>JSON export</strong><span>Coordinates, heading, notes, and links stay attached to each scene.</span></li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="workspace">
+      <section class="stack">
+        <section class="panel card">
+          <h2>Scene import</h2>
+          <p>Add multiple 360 panoramas at once. Best results come from 2:1 equirectangular JPG or PNG files.</p>
+          <input class="file-input" id="fileInput" type="file" multiple accept="image/jpeg,image/png,image/webp" />
+          <label class="dropzone" id="dropzone" for="fileInput">
+            <div><strong>Drop a group of 360 images here</strong><p>or tap to browse.</p></div>
+          </label>
+          <div class="scene-list" id="sceneList"></div>
+        </section>
+      </section>
+
+      <section class="stack">
+        <section class="panel card">
+          <h2>Live tour preview</h2>
+          <p>Click a hotspot to move to a linked scene.</p>
+          <div class="viewer-stage">
+            <div id="pano"></div>
+            <div class="viewer-empty" id="viewerEmpty">Add scenes to start the preview.</div>
+            <div class="viewer-hud">
+              <div class="hud-card"><strong id="viewerSceneName">No active scene</strong><span id="viewerSceneMeta">Upload panoramas to begin.</span></div>
+              <div class="hud-card"><strong id="viewerLinkMeta">0 outgoing links</strong><span>Hotspots jump to linked scenes.</span></div>
+            </div>
+          </div>
+          <div class="status" id="statusBox" role="status" aria-live="polite"><strong>Ready.</strong> Import panoramas to begin.</div>
+        </section>
+      </section>
+
+      <aside class="stack side">
+        <section class="panel card">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem"><div><h2 style="margin-bottom:0">Scene details</h2><p>Edit the selected scene.</p></div><span class="tag" id="selectedSceneTag">No scene</span></div>
+          <div class="fields">
+            <div class="field"><label for="sceneName">Scene name</label><input class="input" id="sceneName" type="text" /></div>
+            <div class="field"><label for="sceneLat">Latitude</label><input class="input" id="sceneLat" type="number" step="0.000001" /></div>
+            <div class="field"><label for="sceneLng">Longitude</label><input class="input" id="sceneLng" type="number" step="0.000001" /></div>
+            <div class="field"><div class="range-head"><label for="sceneHeading">Heading</label><output id="headingValue">0°</output></div><input id="sceneHeading" type="range" min="0" max="359" value="0" step="1" /></div>
+            <div class="field"><label for="sceneDescription">Notes</label><textarea id="sceneDescription"></textarea></div>
+          </div>
+        </section>
+
+        <section class="panel card">
+          <h2>Scene links</h2>
+          <p>Create directional links between scenes.</p>
+          <div class="link-grid" id="linkGrid"></div>
+          <div class="fields">
+            <div class="field"><label for="targetScene">Target scene</label><select class="select" id="targetScene"></select></div>
+            <div class="field"><div class="range-head"><label for="linkYaw">Hotspot yaw</label><output id="linkYawValue">0°</output></div><input id="linkYaw" type="range" min="-180" max="180" value="0" step="1" /></div>
+            <div class="field"><div class="range-head"><label for="linkPitch">Hotspot pitch</label><output id="linkPitchValue">-6°</output></div><input id="linkPitch" type="range" min="-45" max="45" value="-6" step="1" /></div>
+            <button class="btn-secondary" type="button" id="addLinkBtn" disabled>Add link</button>
+          </div>
+        </section>
+
+        <section class="panel card"><h2>Notes</h2><div class="insights"><div class="insight">Upload sets that are already stitched equirectangular panoramas.</div><div class="insight">Use coordinates and heading for Street View publishing prep.</div><div class="insight">Use links for a hosted Street View-style tour.</div></div></section>
+      </aside>
+    </section>
+  </div>
+
+  <script>
+    const state = { scenes: [], activeSceneId: null, viewer: null, currentScene: null, syncing: false };
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    let theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    html.setAttribute('data-theme', theme);
+    themeToggle.textContent = theme === 'dark' ? '☀︎' : '☾';
+    themeToggle.addEventListener('click', () => { theme = theme === 'dark' ? 'light' : 'dark'; html.setAttribute('data-theme', theme); themeToggle.textContent = theme === 'dark' ? '☀︎' : '☾'; });
+
+    const els = {
+      fileInput: document.getElementById('fileInput'), dropzone: document.getElementById('dropzone'), sceneList: document.getElementById('sceneList'),
+      sceneName: document.getElementById('sceneName'), sceneLat: document.getElementById('sceneLat'), sceneLng: document.getElementById('sceneLng'), sceneDescription: document.getElementById('sceneDescription'), sceneHeading: document.getElementById('sceneHeading'), headingValue: document.getElementById('headingValue'),
+      targetScene: document.getElementById('targetScene'), linkYaw: document.getElementById('linkYaw'), linkPitch: document.getElementById('linkPitch'), linkYawValue: document.getElementById('linkYawValue'), linkPitchValue: document.getElementById('linkPitchValue'), addLinkBtn: document.getElementById('addLinkBtn'), linkGrid: document.getElementById('linkGrid'),
+      exportJsonBtn: document.getElementById('exportJsonBtn'), demoBtn: document.getElementById('demoBtn'), selectedSceneTag: document.getElementById('selectedSceneTag'), sceneCountMetric: document.getElementById('sceneCountMetric'), linkCountMetric: document.getElementById('linkCountMetric'), viewerEmpty: document.getElementById('viewerEmpty'), viewerSceneName: document.getElementById('viewerSceneName'), viewerSceneMeta: document.getElementById('viewerSceneMeta'), viewerLinkMeta: document.getElementById('viewerLinkMeta'), statusBox: document.getElementById('statusBox')
+    };
+
+    function setStatus(title, detail) { els.statusBox.innerHTML = `<strong>${title}</strong> ${detail}`; }
+    function uid(prefix='id') { return `${prefix}-${Math.random().toString(36).slice(2,10)}`; }
+    function activeScene() { return state.scenes.find(s => s.id === state.activeSceneId) || null; }
+    function updateRangeOutputs() { els.headingValue.value = `${els.sceneHeading.value}°`; els.linkYawValue.value = `${els.linkYaw.value}°`; els.linkPitchValue.value = `${els.linkPitch.value}°`; }
+    updateRangeOutputs();
+    [els.sceneHeading, els.linkYaw, els.linkPitch].forEach(el => el.addEventListener('input', updateRangeOutputs));
+
+    function updateMetrics() {
+      els.sceneCountMetric.textContent = `${state.scenes.length} ${state.scenes.length === 1 ? 'scene' : 'scenes'}`;
+      const links = state.scenes.reduce((n, s) => n + s.links.length, 0);
+      els.linkCountMetric.textContent = `${links} ${links === 1 ? 'link' : 'links'}`;
+      els.exportJsonBtn.disabled = state.scenes.length === 0;
+    }
+
+    function renderSceneList() {
+      els.sceneList.innerHTML = '';
+      state.scenes.forEach(scene => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `scene-item${scene.id === state.activeSceneId ? ' active' : ''}`;
+        btn.innerHTML = `<span class="scene-thumb"><img src="${scene.imageUrl}" alt="${scene.name}" width="72" height="48"></span><span class="scene-meta"><strong>${scene.name}</strong><span>${scene.fileName}</span></span><span class="tiny-btn">Edit</span>`;
+        btn.addEventListener('click', () => selectScene(scene.id));
+        els.sceneList.appendChild(btn);
+      });
+    }
+
+    function populateTargetOptions() {
+      const current = activeScene();
+      els.targetScene.innerHTML = '<option value="">Choose target scene</option>';
+      state.scenes.filter(s => !current || s.id !== current.id).forEach(scene => {
+        const option = document.createElement('option');
+        option.value = scene.id;
+        option.textContent = scene.name;
+        els.targetScene.appendChild(option);
+      });
+      els.addLinkBtn.disabled = !current || state.scenes.length < 2;
+    }
+
+    function renderLinkGrid() {
+      const scene = activeScene();
+      els.linkGrid.innerHTML = '';
+      if (!scene || !scene.links.length) {
+        els.linkGrid.innerHTML = '<div class="status"><strong>No links yet.</strong> Add a hotspot connection.</div>';
+        return;
+      }
+      scene.links.forEach(link => {
+        const target = state.scenes.find(s => s.id === link.targetId);
+        const row = document.createElement('div');
+        row.className = 'link-row';
+        row.innerHTML = `<span>${target ? target.name : 'Missing target'}</span><span class="tag">${Math.round(link.yaw * 180 / Math.PI)}°</span><span class="tag">${Math.round(link.pitch * 180 / Math.PI)}°</span><button class="tiny-btn" type="button">Remove</button>`;
+        row.querySelector('button').addEventListener('click', () => {
+          scene.links = scene.links.filter(l => l.id !== link.id);
+          renderLinkGrid(); updateMetrics(); renderViewer(); syncEditor(); setStatus('Link removed.', 'The scene connection was deleted.');
+        });
+        els.linkGrid.appendChild(row);
+      });
+    }
+
+    function syncEditor() {
+      state.syncing = true;
+      const scene = activeScene();
+      if (!scene) {
+        els.selectedSceneTag.textContent = 'No scene';
+        els.sceneName.value = ''; els.sceneLat.value = ''; els.sceneLng.value = ''; els.sceneDescription.value = ''; els.sceneHeading.value = 0; updateRangeOutputs();
+        els.viewerSceneName.textContent = 'No active scene'; els.viewerSceneMeta.textContent = 'Upload panoramas to begin.'; els.viewerLinkMeta.textContent = '0 outgoing links';
+        populateTargetOptions(); renderLinkGrid(); state.syncing = false; return;
+      }
+      els.selectedSceneTag.textContent = scene.name;
+      els.sceneName.value = scene.name;
+      els.sceneLat.value = scene.lat ?? '';
+      els.sceneLng.value = scene.lng ?? '';
+      els.sceneDescription.value = scene.description || '';
+      els.sceneHeading.value = scene.heading || 0;
+      updateRangeOutputs();
+      els.viewerSceneName.textContent = scene.name;
+      els.viewerSceneMeta.textContent = `${scene.lat && scene.lng ? `${scene.lat}, ${scene.lng}` : 'No coordinates set'} • heading ${scene.heading || 0}°`;
+      els.viewerLinkMeta.textContent = `${scene.links.length} outgoing ${scene.links.length === 1 ? 'link' : 'links'}`;
+      populateTargetOptions(); renderLinkGrid(); state.syncing = false;
+    }
+
+    function selectScene(id) { state.activeSceneId = id; renderSceneList(); syncEditor(); renderViewer(); }
+
+    function addScenesFromFiles(files) {
+      const images = Array.from(files).filter(file => file.type.startsWith('image/'));
+      if (!images.length) { setStatus('No valid images found.', 'Please choose panorama image files.'); return; }
+      Promise.all(images.map(file => new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = e => resolve({ file, url: e.target.result });
+        reader.readAsDataURL(file);
+      }))).then(items => {
+        items.forEach(({ file, url }) => state.scenes.push({ id: uid('scene'), fileName: file.name, name: file.name.replace(/\.[^/.]+$/, '').replace(/[-_]+/g, ' '), imageUrl: url, lat: '', lng: '', heading: 0, description: '', links: [] }));
+        if (!state.activeSceneId && state.scenes.length) state.activeSceneId = state.scenes[0].id;
+        renderSceneList(); syncEditor(); renderViewer(); updateMetrics(); setStatus('Scenes imported.', `${images.length} panorama ${images.length === 1 ? 'image was' : 'images were'} added.`);
+      });
+    }
+
+    els.fileInput.addEventListener('change', e => addScenesFromFiles(e.target.files));
+    ['dragenter','dragover'].forEach(evt => els.dropzone.addEventListener(evt, e => { e.preventDefault(); els.dropzone.classList.add('dragover'); }));
+    ['dragleave','drop'].forEach(evt => els.dropzone.addEventListener(evt, e => { e.preventDefault(); els.dropzone.classList.remove('dragover'); }));
+    els.dropzone.addEventListener('drop', e => addScenesFromFiles(e.dataTransfer.files));
+
+    els.sceneName.addEventListener('input', () => { if (state.syncing) return; const s = activeScene(); if (!s) return; s.name = els.sceneName.value || 'Untitled scene'; renderSceneList(); populateTargetOptions(); syncEditor(); });
+    els.sceneLat.addEventListener('input', () => { if (state.syncing) return; const s = activeScene(); if (!s) return; s.lat = els.sceneLat.value; syncEditor(); });
+    els.sceneLng.addEventListener('input', () => { if (state.syncing) return; const s = activeScene(); if (!s) return; s.lng = els.sceneLng.value; syncEditor(); });
+    els.sceneDescription.addEventListener('input', () => { if (state.syncing) return; const s = activeScene(); if (!s) return; s.description = els.sceneDescription.value; });
+    els.sceneHeading.addEventListener('input', () => { if (state.syncing) return; const s = activeScene(); if (!s) return; s.heading = Number(els.sceneHeading.value); syncEditor(); renderViewer(); });
+
+    els.addLinkBtn.addEventListener('click', () => {
+      const s = activeScene(); if (!s || !els.targetScene.value) return;
+      s.links.push({ id: uid('link'), targetId: els.targetScene.value, yaw: Number(els.linkYaw.value) * Math.PI / 180, pitch: Number(els.linkPitch.value) * Math.PI / 180 });
+      renderLinkGrid(); updateMetrics(); renderViewer(); syncEditor(); setStatus('Link added.', 'The hotspot is now active in the preview.');
+    });
+
+    function ensureViewer() {
+      if (state.viewer || !window.Marzipano) return;
+      state.viewer = new Marzipano.Viewer(document.getElementById('pano'), { controls: { mouseViewMode: 'drag' } });
+    }
+
+    function buildHotspot(targetId) {
+      const el = document.createElement('button');
+      el.className = 'hotspot';
+      el.type = 'button';
+      el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>';
+      el.addEventListener('click', () => selectScene(targetId));
+      return el;
+    }
+
+    function renderViewer() {
+      const sceneData = activeScene();
+      updateMetrics();
+      if (!sceneData || !window.Marzipano) { els.viewerEmpty.hidden = false; return; }
+      ensureViewer();
+      els.viewerEmpty.hidden = true;
+      const source = Marzipano.ImageUrlSource.fromString(sceneData.imageUrl);
+      const geometry = new Marzipano.EquirectGeometry([{ width: 1024 }, { width: 2048 }, { width: 4096 }]);
+      const limiter = Marzipano.RectilinearView.limit.traditional(2048, Math.PI);
+      const view = new Marzipano.RectilinearView({ yaw: (sceneData.heading || 0) * Math.PI / 180, pitch: 0, fov: Math.PI / 2 }, limiter);
+      const scene = state.viewer.createScene({ source, geometry, view, pinFirstLevel: true });
+      scene.switchTo({ transitionDuration: 300 });
+      sceneData.links.forEach(link => scene.hotspotContainer().createHotspot(buildHotspot(link.targetId), { yaw: link.yaw, pitch: link.pitch }));
+      state.currentScene = scene;
+    }
+
+    els.exportJsonBtn.addEventListener('click', () => {
+      const payload = { name: 'Streetview Tour Export', createdAt: new Date().toISOString(), scenes: state.scenes.map(scene => ({ id: scene.id, name: scene.name, fileName: scene.fileName, imageUrl: scene.imageUrl, coordinates: scene.lat && scene.lng ? { lat: Number(scene.lat), lng: Number(scene.lng) } : null, heading: Number(scene.heading || 0), description: scene.description || '', links: scene.links.map(link => ({ targetId: link.targetId, yaw: link.yaw, pitch: link.pitch })) })) };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'streetview-tour-export.json'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1200); setStatus('Tour exported.', 'Your scene graph and metadata JSON have been downloaded.');
+    });
+
+    function demoPano(label, hue) {
+      const c = document.createElement('canvas'); c.width = 2400; c.height = 1200; const x = c.getContext('2d');
+      const g = x.createLinearGradient(0,0,0,c.height); g.addColorStop(0, `hsl(${hue} 38% 62%)`); g.addColorStop(.5, `hsl(${(hue+24)%360} 42% 74%)`); g.addColorStop(1, `hsl(${(hue+48)%360} 28% 34%)`); x.fillStyle = g; x.fillRect(0,0,c.width,c.height);
+      for (let i=0;i<10;i++){x.fillStyle=`hsla(${(hue+i*9)%360} 32% ${28+i*2}% / .45)`;x.beginPath();x.moveTo(i*250,760);x.quadraticCurveTo(i*250+130,470+(i%3)*40,i*250+290,760);x.lineTo(i*250+290,1200);x.lineTo(i*250,1200);x.closePath();x.fill();}
+      x.fillStyle='rgba(255,255,255,.82)'; x.font='700 92px Cabinet Grotesk, sans-serif'; x.fillText(label,110,170); return c.toDataURL('image/jpeg', .92);
+    }
+    els.demoBtn.addEventListener('click', () => {
+      state.scenes = [
+        { id: uid('scene'), fileName: 'entry.jpg', name: 'Entry plaza', imageUrl: demoPano('Entry Plaza',194), lat: '30.6154', lng: '-96.3417', heading: 20, description: 'Starting scene', links: [] },
+        { id: uid('scene'), fileName: 'hall.jpg', name: 'Main hall', imageUrl: demoPano('Main Hall',34), lat: '30.6155', lng: '-96.3415', heading: 88, description: 'Interior route', links: [] },
+        { id: uid('scene'), fileName: 'garden.jpg', name: 'Garden court', imageUrl: demoPano('Garden Court',126), lat: '30.6156', lng: '-96.3412', heading: 140, description: 'Outdoor node', links: [] }
+      ];
+      state.scenes[0].links.push({ id: uid('link'), targetId: state.scenes[1].id, yaw: 0, pitch: -0.08 });
+      state.scenes[1].links.push({ id: uid('link'), targetId: state.scenes[0].id, yaw: Math.PI, pitch: -0.08 });
+      state.scenes[1].links.push({ id: uid('link'), targetId: state.scenes[2].id, yaw: .7, pitch: -0.1 });
+      state.scenes[2].links.push({ id: uid('link'), targetId: state.scenes[1].id, yaw: -2.4, pitch: -0.08 });
+      state.activeSceneId = state.scenes[0].id;
+      renderSceneList(); syncEditor(); renderViewer(); updateMetrics(); setStatus('Demo loaded.', 'Three linked scenes are ready for editing and preview.');
+    });
+  </script>
+</body>
+</html>

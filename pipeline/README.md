@@ -21,7 +21,7 @@ AgriEYE 360 turns 360° photos of a cotton plot into results for each plant:
 | Disease classifier v2 (YOLO11n-cls) | ✅ Trained 6 Nov | 89.2% accuracy on 835 field test leaves, ROC AUC 0.944. Only 22% on outside close-up photos (does not generalise) |
 | Leaf finder (YOLO11n-seg) | ✅ Trained 6 Nov | Mask precision 0.69, recall 0.62, mAP50 0.67, mAP50-95 0.40 |
 | SAM 3 leaf segmentation (text prompt "leaf") | ✅ Done | 5,085 leaves in 120 views, median score 0.57 |
-| SAM 3 leaf outlines, hand check | ✅ Done 9 Nov | 426 outlines on 10 views: **all real leaves with a good fit**. Missed leaves not counted (see 1e) |
+| SAM 3 leaf outlines, hand check | ✅ Done 9 Nov | 426 outlines on 10 views: **all real leaves** (precision 100%), 423 with a good fit (99.3%). Recall not measured (see 1e) |
 | SAM 3 + YOLO v2 disease, whole field | ✅ Done | 4,231 leaves judged. % diseased: 31 Jul 15.3 · 4 Aug 21.4 · 6 Aug 13.2 · 20 Aug 25.6 |
 | Boll labels: SAM 3 + hand sorting | ✅ Done 8 Nov | 3,068 boll boxes; 2,970 hand-checked: open 441 · closed 2,465 · not a boll 64 |
 | **Boll classifier (Roboflow ViT-Base)** | ✅ Trained 8 Nov | **97.7% on 355 test images** (open recall 91.7%, closed 100%, sky/cloud rejected 51/51) |
@@ -98,7 +98,8 @@ Every task is done in **two steps**: SAM 3 finds the objects, then a trained cla
 
 `sam3_seg_check.py` showed 10 views (spread over all 4 visits) with every SAM 3 leaf outline (prompt "leaf", conf 0.3).
 
-- **Precision: 426 of 426 outlines (100%) were judged to be real leaves with a good fit.** No boll, stem, sky or soil was outlined. A few outlines are weed or grass leaves, not cotton.
+- **Precision: 426 of 426 outlines (100%) were judged to be real leaves.** 423 had a good fit (99.3%); 3 were partial (all in P09, 31 Jul, east view: small dead leaves on the soil). No boll, stem, sky or soil was outlined. A few outlines are weed or grass leaves, not cotton.
+- **Two rounds:** a precision round (`answers.json`) and a recall round (`answers_recall.json`, filled outlines, missed leaves to be marked). The report uses the recall round.
 - **Recall: not measured.** Leaves with no outline were not marked. A visual check shows SAM 3 **misses some clearly visible leaves**, so recall is below 100%.
 - **What this means:** SAM 3 gives a reliable **sample** of leaves on each plant. That is fine for **% diseased** (a ratio). **Leaf counts are not used as a measure of plant size.**
 - Files: `F:\Project and completed courses\Agri EYE 360\sample_results\sam3_seg_check\` (`report.txt`, `per_view.csv`, `answers.json`).

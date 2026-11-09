@@ -2,6 +2,7 @@
 How reliable is SAM 3's leaf segmentation? You judge every SAM 3 outline on a few random views.
 
   python sam3_seg_check.py              # check views (10 by default, spread over the visit dates)
+  python sam3_seg_check.py --recall     # recall round: only mark leaves WITHOUT an outline (own answers file)
   python sam3_seg_check.py --report     # precision / recall from your answers
 
 Every outline starts GREEN (= good leaf). You only fix the others:
@@ -32,7 +33,9 @@ SRC = ROOT / "agrieye_output" / "sam3_yolo_disease"
 POVS = ROOT / "agrieye_output" / "povs"
 OUT = ROOT / "sample_results" / "sam3_seg_check"
 ANS = OUT / "answers.json"
-SHOW = 900
+ANS_R = OUT / "answers_recall.json"     # recall round (labels start from answers.json)
+SHOW = 900                              # set to fit the screen in main
+RECALL = False
 COL = {"good": (40, 220, 60), "partial": (255, 200, 0), "wrong": (240, 40, 40)}
 CYCLE = ["good", "partial", "wrong"]
 
@@ -69,13 +72,17 @@ def area(poly):
 class Checker:
     def __init__(self, root, views):
         self.root, self.views = root, views
-        self.ans = json.loads(ANS.read_text(encoding="utf-8")) if ANS.exists() else {}
-        self.i = next((k for k, v in enumerate(views) if self.key(v) not in self.ans), len(views))
-        root.title("SAM 3 leaf segmentation check"); root.configure(bg="#1e1e1e")
+        self.file = ANS_R if RECALL else ANS
+        self.ans = json.loads(self.file.read_text(encoding="utf-8")) if self.file.exists() else {}
+        self.base = json.loads(ANS.read_text(encoding="utf-8")) if RECALL and ANS.exists() else {}
+        # recall round always starts at view 1 and shows what was saved (so marks can be added to every view)
+        self.i = 0 if RECALL else next((k for k, v in enumerate(views) if self.key(v) not in self.ans), len(views))
+        root.title("SAM 3 leaf check - RECALL ROUND" if RECALL else "SAM 3 leaf segmentation check"); root.configure(bg="#1e1e1e")
         self.head = tk.Label(root, bg="#1e1e1e", fg="white", font=("Segoe UI", 11), justify="left", anchor="w")
         self.head.pack(fill="x", padx=8, pady=4)
         self.cv = tk.Canvas(root, width=SHOW, height=SHOW, bg="black", highlightthickness=0); self.cv.pack()
         self.cv.bind("<Button-1>", self.left); self.cv.bind("<Button-3>", self.right)
+        self.cv.bind("<Control-Button-1>", self.right); self.cv.bind("<Shift-Button-1>", self.right)   # touchpad: Ctrl/Shift + click = missed
         root.bind("<Return>", self.save_next); root.bind("<KP_Enter>", self.save_next)
         root.bind("b", self.back); root.bind("B", self.back); root.bind("<Escape>", lambda e: root.destroy())
         self.load()
@@ -93,7 +100,8 @@ class Checker:
         self.k = SHOW / max(self.img.size)
         self.polys = [o["polygon"] for o in json.loads(p.read_text(encoding="utf-8")) if o.get("prompt", "leaf") == "leaf"]
         prev = self.ans.get(self.key(p))
-        self.lab = prev["labels"] if prev else ["good"] * len(self.polys)
+        base = self.base.get(self.key(p))
+        self.lab = prev["labels"] if prev else (list(base["labels"]) if base else ["good"] * len(self.polys))
         self.missed = prev["missed"] if prev else []
         self.draw()
 
@@ -101,7 +109,7 @@ class Checker:
         im = self.img.copy(); d = ImageDraw.Draw(im, "RGBA")
         for poly, lab in zip(self.polys, self.lab):
             c = COL[lab]
-            d.polygon([tuple(q) for q in poly], fill=c + (45,), outline=c + (255,), width=3 if lab == "good" else 6)
+            d.polygon([tuple(q) for q in poly], fill=c + (120 if RECALL else 45,), outline=c + (255,), width=3 if lab == "good" else 6)
         for x, y in self.missed:
             d.ellipse([x - 14, y - 14, x + 14, y + 14], fill=(40, 120, 255, 230), outline=(255, 255, 255, 255), width=3)
         im = im.resize((int(im.width * self.k), int(im.height * self.k)))
@@ -111,8 +119,11 @@ class Checker:
         self.head.configure(text=(
             f"View {self.i + 1}/{len(self.views)}  {p.parent.parent.name} {p.parent.name} {p.name.replace('_polygons.json', '')}   "
             f"outlines {len(self.polys)}: good {n['good']}  partial {n['partial']}  wrong {n['wrong']}   missed {len(self.missed)}\n"
-            "Left click outline = good > partial > wrong   Right click a leaf without outline = missed   "
-            "Enter = save + next   B = back   Esc = quit"))
+            + ("RECALL ROUND: RIGHT-CLICK (or Ctrl+click) every clear cotton leaf with NO green fill (blue dot).  "
+               "Left click a green leaf only if it is grass / weed / not a leaf.\n"
+               "Enter = save + next   B = back   Esc = quit" if RECALL else
+               "Left click outline = good > partial > wrong   Right click a leaf without outline = missed   "
+               "Enter = save + next   B = back   Esc = quit")))
 
     def at(self, e):
         return e.x / self.k, e.y / self.k
@@ -138,7 +149,7 @@ class Checker:
             return
         self.ans[self.key(self.views[self.i])] = dict(labels=self.lab, missed=self.missed)
         OUT.mkdir(parents=True, exist_ok=True)
-        ANS.write_text(json.dumps(self.ans), encoding="utf-8")
+        self.file.write_text(json.dumps(self.ans), encoding="utf-8")
         self.i += 1; self.load()
 
     def back(self, e=None):
@@ -148,6 +159,8 @@ class Checker:
 
 def report():
     ans = json.loads(ANS.read_text(encoding="utf-8"))
+    if ANS_R.exists():                                   # recall round overrides labels + missed per view
+        ans.update(json.loads(ANS_R.read_text(encoding="utf-8")))
     rows, tot = [], defaultdict(int)
     for k, a in sorted(ans.items()):
         n = {c: a["labels"].count(c) for c in CYCLE}
@@ -185,9 +198,17 @@ def report():
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--report", action="store_true")
+    ap.add_argument("--recall", action="store_true")
     ap.add_argument("--views", type=int, default=10)
     a = ap.parse_args()
     if a.report:
         report()
     else:
-        r = tk.Tk(); Checker(r, pick_views(a.views)); r.mainloop()
+        RECALL = a.recall
+        try:                                             # sharp, true-size window on scaled (150%) screens
+            import ctypes; ctypes.windll.shcore.SetProcessDpiAwareness(1)
+        except Exception:
+            pass
+        r = tk.Tk()
+        SHOW = max(500, min(1100, r.winfo_screenheight() - 190))
+        Checker(r, pick_views(a.views)); r.mainloop()

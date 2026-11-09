@@ -5,8 +5,9 @@ Copy the current AgriEYE 360 work into the GitHub repo clone and commit it.
   python sync_to_github.py --commit   # copy + commit (local only)
   python sync_to_github.py --push     # copy + commit + push to GitHub
 
-Only the files listed below are copied (code, docs, small results, the two small trained models).
-Never copied: photos, crops, datasets, sam3.pt, Street View tours, and any file with a hard-coded API key.
+Copied: the files listed below (code, docs, main results, the two small trained models) and ALL workflow
+outputs (agrieye_output -> data/agrieye_output, sample_results -> data/sample_results).
+Never copied: raw photos, Roboflow/training datasets, sam3.pt, files over 95 MB, and any file with a hard-coded API key.
 Before committing, every copied text file is scanned for API keys; one hit stops everything.
 
 Repo clone: AgriEYE360-_Vision-Based-Agricultural-Mapping-Crop-Health-Analysis\ (github.com/Bharathtammi/...)
@@ -48,9 +49,14 @@ FILES = [
     ("disease_autolabel/metrics/00_results_grid.png", "results/disease_metrics/00_results_grid.png"),
     ("disease_autolabel/metrics/dashboard.png", "results/disease_metrics/dashboard.png"),
 ]
+# whole folders copied as they are (all workflow outputs); files over MAX_MB are skipped
+TREES = [
+    ("agrieye_output", "data/agrieye_output"),
+    ("sample_results", "data/sample_results"),
+]
 KEY = re.compile(r"""(api_key|apikey|token|secret|password)\s*[=:]\s*["'][A-Za-z0-9_\-]{12,}["']""", re.I)
 TEXT = {".py", ".json", ".bat", ".md", ".txt", ".csv", ".html", ".yaml"}
-MAX_MB = 50
+MAX_MB = 95          # GitHub refuses single files over 100 MB
 
 
 def git(*a, check=True):
@@ -60,27 +66,31 @@ def git(*a, check=True):
     return r.stdout.strip()
 
 
+def copy_one(f, out, copied):
+    if not f.is_file() or (f.suffix == ".py" and f.name in SKIP_PY):
+        return
+    st = f.stat()
+    if st.st_size > MAX_MB * 2**20:
+        print(f"  SKIP (over {MAX_MB} MB): {f}"); return
+    if f.suffix in TEXT:
+        hit = KEY.search(f.read_text(encoding="utf-8", errors="ignore"))
+        if hit:
+            sys.exit(f"STOP: {f} looks like it contains a key ({hit.group(1)} = ...). Nothing committed.")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    if not out.exists() or out.stat().st_size != st.st_size or out.stat().st_mtime < st.st_mtime - 1:
+        shutil.copy2(f, out)
+    copied.append(out)
+
+
 def copy_all():
     copied = []
     for src, dst in FILES:
-        if "*" in src:
-            matches = sorted(SRC.glob(src))
-        else:
-            matches = [SRC / src]
+        matches = sorted(SRC.glob(src)) if "*" in src else [SRC / src]
         for f in matches:
-            if not f.is_file() or (f.suffix == ".py" and f.name in SKIP_PY):
-                continue
-            if f.stat().st_size > MAX_MB * 2**20:
-                print(f"  SKIP (over {MAX_MB} MB): {f}"); continue
-            out = REPO / (dst + f.name if dst.endswith("/") else dst)
-            if f.suffix in TEXT:
-                hit = KEY.search(f.read_text(encoding="utf-8", errors="ignore"))
-                if hit:
-                    sys.exit(f"STOP: {f} looks like it contains a key ({hit.group(1)} = ...). Nothing committed.")
-            out.parent.mkdir(parents=True, exist_ok=True)
-            if not out.exists() or out.read_bytes() != f.read_bytes():
-                shutil.copy2(f, out)
-            copied.append(out)
+            copy_one(f, REPO / (dst + f.name if dst.endswith("/") else dst), copied)
+    for src, dst in TREES:
+        for f in sorted((SRC / src).rglob("*")):
+            copy_one(f, REPO / dst / f.relative_to(SRC / src), copied)
     return copied
 
 
@@ -93,10 +103,12 @@ def main():
     if not (REPO / ".git").exists():
         sys.exit(f"Repo clone not found: {REPO}")
     copied = copy_all()
-    git("add", "pipeline", "models", "results", ".gitignore", "README.md")
+    git("add", "pipeline", "models", "results", "data", ".gitignore", "README.md")
     status = git("status", "--short")
     print(f"Copied/checked {len(copied)} files into {REPO}")
-    print(status or "No changes since the last commit.")
+    lines = status.splitlines()
+    print("\n".join(lines[:40]) + (f"\n... and {len(lines) - 40} more" if len(lines) > 40 else "")
+          if lines else "No changes since the last commit.")
     if not (a.commit or a.push) or not status:
         if status:
             print("\nNothing committed. Run again with --commit (local) or --push (local + GitHub).")

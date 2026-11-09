@@ -1,0 +1,154 @@
+﻿Loading SAM 3 on cpu ...
+Ultralytics 8.4.202  Python-3.11.9 torch-2.15.0+cpu CPU (11th Gen Intel Core i5-1155G7 @ 2.50GHz)
+[1/120] P01 2026-07-31 N: leaf: 37
+[2/120] P01 2026-07-31 E: leaf: 43
+[3/120] P01 2026-07-31 S: leaf: 40
+[4/120] P01 2026-07-31 W: leaf: 37
+[5/120] P03 2026-07-31 N: leaf: 39
+[6/120] P03 2026-07-31 E: leaf: 51
+[7/120] P03 2026-07-31 S: leaf: 41
+[8/120] P03 2026-07-31 W: leaf: 41
+[9/120] P06 2026-07-31 N: leaf: 47
+[10/120] P06 2026-07-31 E: leaf: 38
+[11/120] P06 2026-07-31 S: leaf: 42
+[12/120] P06 2026-07-31 W: leaf: 38
+[13/120] P09 2026-07-31 N: leaf: 37
+[14/120] P09 2026-07-31 E: leaf: 50
+[15/120] P09 2026-07-31 S: leaf: 48
+[16/120] P09 2026-07-31 W: leaf: 39
+[17/120] P12 2026-07-31 N: leaf: 38
+[18/120] P12 2026-07-31 E: leaf: 43
+[19/120] P12 2026-07-31 S: leaf: 46
+[20/120] P12 2026-07-31 W: leaf: 47
+[21/120] P02 2026-07-31 N: leaf: 46
+[22/120] P02 2026-07-31 E: leaf: 36
+[23/120] P02 2026-07-31 S: leaf: 38
+[24/120] P02 2026-07-31 W: leaf: 52
+[25/120] P04 2026-07-31 N: leaf: 37
+[26/120] P04 2026-07-31 E: leaf: 55
+[27/120] P04 2026-07-31 S: leaf: 34
+[28/120] P04 2026-07-31 W: leaf: 39
+[29/120] P08 2026-07-31 N: leaf: 40
+[30/120] P08 2026-07-31 E: leaf: 49
+[31/120] P08 2026-07-31 S: leaf: 46
+[32/120] P08 2026-07-31 W: leaf: 44
+[33/120] P11 2026-07-31 N: leaf: 35
+[34/120] P11 2026-07-31 E: leaf: 42
+[35/120] P11 2026-07-31 S: leaf: 47
+[36/120] P11 2026-07-31 W: leaf: 37
+[37/120] P01 2026-08-04 N: leaf: 31
+[38/120] P01 2026-08-04 E: leaf: 46
+[39/120] P01 2026-08-04 S: leaf: 43
+[40/120] P01 2026-08-04 W: leaf: 47
+[41/120] P03 2026-08-04 N: leaf: 48
+[42/120] P03 2026-08-04 E: leaf: 40
+[43/120] P03 2026-08-04 S: leaf: 52
+[44/120] P03 2026-08-04 W: leaf: 40
+[45/120] P12 2026-08-04 N: leaf: 46
+[46/120] P12 2026-08-04 E: leaf: 44
+[47/120] P12 2026-08-04 S: leaf: 45
+[48/120] P12 2026-08-04 W: leaf: 46
+[49/120] P09 2026-08-04 N: leaf: 44
+[50/120] P09 2026-08-04 E: leaf: 33
+[51/120] P09 2026-08-04 S: leaf: 49
+[52/120] P09 2026-08-04 W: leaf: 47
+[53/120] P10 2026-08-04 N: leaf: 47
+[54/120] P10 2026-08-04 E: leaf: 33
+[55/120] P10 2026-08-04 S: leaf: 44
+[56/120] P10 2026-08-04 W: leaf: 38
+[57/120] P06 2026-08-04 N: leaf: 33
+[58/120] P06 2026-08-04 E: leaf: 39
+[59/120] P06 2026-08-04 S: leaf: 47
+[60/120] P06 2026-08-04 W: leaf: 40
+[61/120] P02 2026-08-04 N: leaf: 38
+[62/120] P02 2026-08-04 E: leaf: 44
+[63/120] P02 2026-08-04 S: leaf: 48
+[64/120] P02 2026-08-04 W: leaf: 23
+[65/120] P05 2026-08-04 N: leaf: 45
+[66/120] P05 2026-08-04 E: leaf: 37
+[67/120] P05 2026-08-04 S: leaf: 46
+[68/120] P05 2026-08-04 W: leaf: 43
+[69/120] P07 2026-08-04 N: leaf: 31
+[70/120] P07 2026-08-04 E: leaf: 21
+[71/120] P07 2026-08-04 S: leaf: 46
+[72/120] P07 2026-08-04 W: leaf: 47
+[73/120] P01 2026-08-06 N: leaf: 35
+[74/120] P01 2026-08-06 E: leaf: 47
+[75/120] P01 2026-08-06 S: leaf: 31
+[76/120] P01 2026-08-06 W: leaf: 46
+[77/120] P04 2026-08-06 N: leaf: 41
+[78/120] P04 2026-08-06 E: leaf: 46
+[79/120] P04 2026-08-06 S: leaf: 35
+[80/120] P04 2026-08-06 W: leaf: 41
+[81/120] P09 2026-08-06 N: leaf: 50
+[82/120] P09 2026-08-06 E: leaf: 45
+[83/120] P09 2026-08-06 S: leaf: 40
+[84/120] P09 2026-08-06 W: leaf: 41
+[85/120] P10 2026-08-06 N: leaf: 42
+[86/120] P10 2026-08-06 E: leaf: 31
+[87/120] P10 2026-08-06 S: leaf: 43
+[88/120] P10 2026-08-06 W: leaf: 44
+[89/120] P13 2026-08-06 N: leaf: 49
+[90/120] P13 2026-08-06 E: leaf: 34
+[91/120] P13 2026-08-06 S: leaf: 52
+[92/120] P13 2026-08-06 W: leaf: 40
+[93/120] P02 2026-08-06 N: leaf: 51
+[94/120] P02 2026-08-06 E: leaf: 44
+[95/120] P02 2026-08-06 S: leaf: 48
+[96/120] P02 2026-08-06 W: leaf: 45
+[97/120] P03 2026-08-20 N: leaf: 38
+[98/120] P03 2026-08-20 E: leaf: 45
+[99/120] P03 2026-08-20 S: leaf: 44
+[100/120] P03 2026-08-20 W: leaf: 48
+[101/120] P09 2026-08-20 N: leaf: 41
+[102/120] P09 2026-08-20 E: leaf: 39
+[103/120] P09 2026-08-20 S: leaf: 36
+[104/120] P09 2026-08-20 W: leaf: 46
+[105/120] P10 2026-08-20 N: leaf: 49
+[106/120] P10 2026-08-20 E: leaf: 34
+[107/120] P10 2026-08-20 S: leaf: 53
+[108/120] P10 2026-08-20 W: leaf: 44
+[109/120] P13 2026-08-20 N: leaf: 52
+[110/120] P13 2026-08-20 E: leaf: 51
+[111/120] P13 2026-08-20 S: leaf: 46
+[112/120] P13 2026-08-20 W: leaf: 45
+[113/120] P06 2026-08-20 N: leaf: 38
+[114/120] P06 2026-08-20 E: leaf: 49
+[115/120] P06 2026-08-20 S: leaf: 41
+[116/120] P06 2026-08-20 W: leaf: 42
+[117/120] P02 2026-08-20 N: leaf: 43
+[118/120] P02 2026-08-20 E: leaf: 44
+[119/120] P02 2026-08-20 S: leaf: 41
+[120/120] P02 2026-08-20 W: leaf: 45
+
+Summary: F:\Project and completed courses\Agri EYE 360\agrieye_output\sam3_segmentation\summary.csv
+  plant=P01  date=2026-07-31  leaf count=157  leaf % of view=22.4
+  plant=P01  date=2026-08-04  leaf count=167  leaf % of view=25.2
+  plant=P01  date=2026-08-06  leaf count=159  leaf % of view=23.3
+  plant=P02  date=2026-07-31  leaf count=172  leaf % of view=17.3
+  plant=P02  date=2026-08-04  leaf count=153  leaf % of view=15.8
+  plant=P02  date=2026-08-06  leaf count=188  leaf % of view=20.6
+  plant=P02  date=2026-08-20  leaf count=173  leaf % of view=28.9
+  plant=P03  date=2026-07-31  leaf count=172  leaf % of view=22.9
+  plant=P03  date=2026-08-04  leaf count=180  leaf % of view=24.5
+  plant=P03  date=2026-08-20  leaf count=175  leaf % of view=28.3
+  plant=P04  date=2026-07-31  leaf count=165  leaf % of view=20.3
+  plant=P04  date=2026-08-06  leaf count=163  leaf % of view=26.2
+  plant=P05  date=2026-08-04  leaf count=171  leaf % of view=17.4
+  plant=P06  date=2026-07-31  leaf count=165  leaf % of view=18.1
+  plant=P06  date=2026-08-04  leaf count=159  leaf % of view=30.1
+  plant=P06  date=2026-08-20  leaf count=170  leaf % of view=37.8
+  plant=P07  date=2026-08-04  leaf count=145  leaf % of view=20.0
+  plant=P08  date=2026-07-31  leaf count=179  leaf % of view=8.1
+  plant=P09  date=2026-07-31  leaf count=174  leaf % of view=23.9
+  plant=P09  date=2026-08-04  leaf count=173  leaf % of view=14.8
+  plant=P09  date=2026-08-06  leaf count=176  leaf % of view=22.4
+  plant=P09  date=2026-08-20  leaf count=162  leaf % of view=24.3
+  plant=P10  date=2026-08-04  leaf count=162  leaf % of view=24.6
+  plant=P10  date=2026-08-06  leaf count=160  leaf % of view=19.8
+  plant=P10  date=2026-08-20  leaf count=180  leaf % of view=15.0
+  plant=P11  date=2026-07-31  leaf count=161  leaf % of view=15.5
+  plant=P12  date=2026-07-31  leaf count=174  leaf % of view=20.8
+  plant=P12  date=2026-08-04  leaf count=181  leaf % of view=26.6
+  plant=P13  date=2026-08-06  leaf count=175  leaf % of view=22.0
+  plant=P13  date=2026-08-20  leaf count=194  leaf % of view=17.7

@@ -1,0 +1,14 @@
+﻿Objects: SAM 3 labels (no trained detector yet)
+Leaves/health: best.pt + best.pt
+Bolls: label = your hand sorting (2970) > boll model (3067) > SAM 3's own label
+  20/120 POVs
+  40/120 POVs
+  60/120 POVs
+  80/120 POVs
+  100/120 POVs
+  120/120 POVs
+Boll labels used: {'hand': 2557, 'model': 85}
+
+Per-POV results: F:\Project and completed courses\Agri EYE 360\agrieye_output\results\detections.csv
+Growth table   : F:\Project and completed courses\Agri EYE 360\agrieye_output\results\growth.csv
+Growth plots   : F:\Project and completed courses\Agri EYE 360\agrieye_output\results\plots

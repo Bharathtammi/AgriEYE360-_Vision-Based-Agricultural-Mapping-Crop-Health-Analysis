@@ -1,0 +1,24 @@
+﻿Objects: SAM 3 labels (no trained detector yet)
+python.exe : Traceback (most recent call last):
+At line:1 char:302
++ ... tch {} } }; & "C:\Users\bhara\Downloads\.venv\Scripts\python.exe" "F: ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "F:\Project and completed courses\Agri EYE 360\agrieye.py", line 911, in <module>
+    main()
+  File "F:\Project and completed courses\Agri EYE 360\agrieye.py", line 907, in main
+    args.fn(Cfg(args.config), args)
+  File "F:\Project and completed courses\Agri EYE 360\agrieye.py", line 564, in cmd_analyze
+    from ultralytics import YOLO
+  File "C:\Users\bhara\Downloads\.venv\Lib\site-packages\ultralytics\__init__.py", line 14, in <module>
+    from ultralytics.utils import ASSETS, SETTINGS
+  File "C:\Users\bhara\Downloads\.venv\Lib\site-packages\ultralytics\utils\__init__.py", line 30, in <module>
+    import torch
+  File "C:\Users\bhara\Downloads\.venv\Lib\site-packages\torch\__init__.py", line 319, in <module>
+    _load_dll_libraries()
+  File "C:\Users\bhara\Downloads\.venv\Lib\site-packages\torch\__init__.py", line 302, in _load_dll_libraries
+    raise err
+OSError: [WinError 4551] An Application Control policy has blocked this file. Error loading 
+"C:\Users\bhara\Downloads\.venv\Lib\site-packages\torch\lib\torch.dll" or one of its dependencies.

@@ -2,7 +2,8 @@
 
 > **Current pipeline (cotton, Nov 2026):** the working code, full guide and results are in [`pipeline/`](pipeline/README.md) ([PDF guide](pipeline/AgriEYE360_project_guide.pdf)), trained models in [`models/`](models/) and per-plant results in [`results/`](results/).
 > Two-step method: SAM 3 finds bolls and leaves, trained classifiers judge them (boll open/closed 97.7%, leaf disease 89.2% on unseen test images).
-> Not in the repo: raw photos, training datasets and `sam3.pt` (SAM 3 weights, 3.4 GB).
+> All workflow outputs (4-POV views, boll crops, SAM 3 outlines, Street View tours, checks) are in [`data/`](data/).
+> Not in the repo: raw 360 photos, Roboflow training datasets and `sam3.pt` (SAM 3 weights, 3.4 GB).
 
 
 AgriEYE360 is an end-to-end computer vision project for agricultural field monitoring that combines 360° image understanding, crop health detection, and navigation-oriented field mapping into a single workflow. The repository is built in Python, includes a dataset folder, and centers on a real-world corn-field monitoring use case with YOLOv8-based analysis.[1]

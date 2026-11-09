@@ -815,8 +815,40 @@ def bearing(lat1, lon1, lat2, lon2):
     return (math.degrees(math.atan2(y, x)) + 360) % 360
 
 
+def scene_bolls(cfg, r, labs, hand, bmodel):
+    """Every open / closed boll of one panorama as a viewer position (yaw, pitch in radians, 0 = camera forward).
+    Same labels as 'analyze': your hand label > boll model (R1) > SAM 3's own label; 'not a boll' is dropped.
+    Inverse of equirect_to_perspective: a POV pixel -> longitude/latitude in the panorama."""
+    names, size = cfg.classes, int(cfg.pov["size"])
+    f = (size / 2) / math.tan(math.radians(cfg.pov["fov_deg"]) / 2)
+    heading = float(r["heading"]) if r["heading"] else 0.0
+    out = []
+    for d, compass in cfg.pov["directions"].items():
+        j = labs.get(str(pov_path(cfg, r, d)))
+        if not j:
+            continue
+        view_yaw = math.radians(((compass - heading + 180) % 360) - 180)
+        for i_, x in enumerate(j["dets"]):
+            name = f"{r['photo_id']}_{d}_{i_:03d}.jpg"
+            lab = hand.get(name) or (bmodel[name][0] if name in bmodel else None)
+            if lab == "not_boll":
+                continue
+            cls = names.index(f"{lab}_boll") if lab in ("open", "closed") else x["cls"]
+            if names[cls] not in ("open_boll", "closed_boll"):
+                continue
+            b = x["box"]
+            cx, cy = (b[0] + b[2]) / 2 - size / 2, (b[1] + b[3]) / 2 - size / 2      # right / down from view centre
+            lon = view_yaw + math.atan2(cx, f)
+            lat = math.atan2(-cy, math.hypot(cx, f))
+            out.append(dict(yaw=round((lon + math.pi) % (2 * math.pi) - math.pi, 4), pitch=round(-lat, 4),
+                            open=names[cls] == "open_boll", dir=d,
+                            src="hand" if name in hand else ("model" if name in bmodel else "sam3")))
+    return out
+
+
 def cmd_streetview(cfg, args):
     rows = [r for r in stations(cfg) if r["lat"]]
+    labs, hand, bmodel = sam3_labels(cfg), boll_hand_labels(cfg), boll_model_labels(cfg)
     growth = {}
     if (cfg.results / "growth.csv").exists():
         growth = {(g["station"], g["date"]): g for g in read_csv(cfg.results / "growth.csv")}
@@ -855,6 +887,7 @@ def cmd_streetview(cfg, args):
                 heading=float(r["heading"] or 0), description=" | ".join(parts),
                 station=r["station"], date=r["date"],
                 analysis={k_: g[k_] for k_ in g if k_ not in ("station", "date")},
+                bolls=scene_bolls(cfg, r, labs, hand, bmodel),
                 links=[]))
         # links to nearest neighbours; yaw = compass bearing relative to the camera heading
         for a in scenes:

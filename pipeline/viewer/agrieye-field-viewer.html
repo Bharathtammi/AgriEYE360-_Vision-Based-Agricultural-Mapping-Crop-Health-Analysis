@@ -1,11 +1,201 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AgriEYE Field Tour</title>
-<style>body{margin:0;background:#14251b;color:white;font:16px system-ui}header{padding:12px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}#pano{height:76vh;width:100%}button,select{padding:10px}#status{padding:12px}.hotspot{border:2px solid white;border-radius:50%;background:#226b3c;color:white;font-size:24px;cursor:pointer}</style>
-<header><strong>AgriEYE Field Tour</strong><input id="file" type="file" accept=".json,application/json"><button id="prev" disabled>← Previous</button><select id="select" disabled></select><button id="next" disabled>Next →</button></header><div id="pano"></div><div id="status" role="status">Choose your exported tour JSON. Images stay in this browser; the viewer library requires internet.</div>
-<script src="https://cdn.jsdelivr.net/npm/marzipano@0.10.2/dist/marzipano.js"></script><script>
-const el=id=>document.getElementById(id);let viewer=null,records=[],active=0,loading=false,generation=0;
-function controls(){el('prev').disabled=loading||active===0;el('next').disabled=loading||active===records.length-1;el('select').disabled=loading||!records.length;el('select').value=String(active)}
-function dimensions(url){return new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image.naturalWidth);image.onerror=()=>reject(Error('Could not decode panorama image.'));image.src=url})}
-async function show(index){if(loading||index<0||index>=records.length)return;loading=true;const token=generation;controls();el('status').textContent='Loading panorama…';try{const record=records[index];if(!record.scene){const width=await dimensions(record.data.imageUrl);if(token!==generation)return;const view=new Marzipano.RectilinearView({yaw:0,pitch:0,fov:Math.PI/2},Marzipano.RectilinearView.limit.traditional(width,Math.PI*0.75));record.scene=viewer.createScene({source:Marzipano.ImageUrlSource.fromString(record.data.imageUrl),geometry:new Marzipano.EquirectGeometry([{width}]),view});for(const link of record.data.links||[]){const target=records.findIndex(r=>r.data.id===link.targetId);if(target<0)continue;const b=document.createElement('button');b.className='hotspot';b.textContent='↑';b.title='Go to '+(records[target].data.name||String(target+1));b.onclick=()=>show(target);record.scene.hotspotContainer().createHotspot(b,{yaw:Number(link.yaw)||0,pitch:Number(link.pitch)||0})}}record.scene.switchTo({transitionDuration:500});active=index;el('status').textContent=`Point ${index+1} of ${records.length}: ${record.data.name||record.data.fileName||record.data.id}. `+(record.data.coordinates?'Coordinates present in export.':'No geographic coordinates for this point.');}catch(e){el('status').textContent='Error: '+e.message}finally{if(token===generation){loading=false;controls()}}}
-el('file').onchange=async event=>{const file=event.target.files[0];if(!file)return;el('file').disabled=true;try{if(!window.Marzipano)throw Error('Viewer library unavailable. Check internet and reload.');el('status').textContent='Reading JSON…';const data=JSON.parse(await file.text());if(!Array.isArray(data.scenes)||!data.scenes.length)throw Error('Expected a nonempty scenes array.');const ids=new Set();for(const s of data.scenes){if(!s.id||ids.has(s.id)||typeof s.imageUrl!=='string'||!s.imageUrl.startsWith('data:image/'))throw Error('Each scene needs a unique id and an embedded imageUrl.');ids.add(s.id)}generation++;loading=false;if(viewer)viewer.destroy();el('pano').replaceChildren();viewer=new Marzipano.Viewer(el('pano'));records=data.scenes.map(data=>({data,scene:null}));active=0;el('select').replaceChildren();records.forEach((r,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=r.data.name||r.data.fileName||String(i+1);el('select').appendChild(o)});await show(0)}catch(e){el('status').textContent='Error: '+e.message}finally{el('file').disabled=false}};
-el('prev').onclick=()=>show(active-1);el('next').onclick=()=>show(active+1);el('select').onchange=e=>show(Number(e.target.value));
-</script></html>
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AgriEYE 360 Field Tour</title>
+<style>
+  :root { --bg:#14251b; --panel:#1b3024; --line:#2f4a39; --ink:#f2f5f3; --quiet:#a9bdb0; --open:#00e6ff; --closed:#ff00c8; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px system-ui, Segoe UI, sans-serif; }
+  header { padding:10px 12px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; border-bottom:1px solid var(--line); }
+  header strong { font-size:17px; margin-right:6px; }
+  button, select { padding:8px 10px; font:inherit; }
+  label.toggle { display:flex; gap:6px; align-items:center; cursor:pointer; }
+  .legend { display:flex; gap:14px; align-items:center; color:var(--quiet); font-size:14px; }
+  .dot { display:inline-block; width:12px; height:12px; border-radius:50%; vertical-align:-1px; margin-right:5px; }
+  .dot.open { background:var(--open); border:2px solid #000; }
+  .dot.closed { border:2px dashed var(--closed); box-shadow:0 0 0 1px #000; }
+  main { display:flex; height:calc(100vh - 100px); min-height:420px; }
+  #pano { flex:1; position:relative; }
+  aside { width:330px; overflow:auto; background:var(--panel); border-left:1px solid var(--line); padding:14px; }
+  aside h2 { margin:0 0 2px; font-size:20px; }
+  aside .sub { color:var(--quiet); margin-bottom:12px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
+  .tile { background:rgba(0,0,0,.18); border:1px solid var(--line); border-radius:8px; padding:8px 10px; }
+  .tile .v { font-size:22px; font-weight:700; }
+  .tile .k { color:var(--quiet); font-size:12.5px; }
+  .tile.open .v { color:var(--open); } .tile.closed .v { color:var(--closed); }
+  .note { color:var(--quiet); font-size:12.5px; line-height:1.4; margin-bottom:14px; }
+  table { width:100%; border-collapse:collapse; font-size:13.5px; }
+  th, td { text-align:right; padding:5px 6px; border-bottom:1px solid var(--line); }
+  th:first-child, td:first-child { text-align:left; }
+  th { color:var(--quiet); font-weight:600; }
+  tbody tr { cursor:pointer; } tbody tr:hover { background:rgba(255,255,255,.06); }
+  tbody tr.active { background:rgba(0,230,255,.14); }
+  #status { padding:8px 12px; color:var(--quiet); font-size:13.5px; border-top:1px solid var(--line); }
+  .hotspot { border:2px solid white; border-radius:50%; background:#226b3c; color:white; font-size:22px; width:40px; height:40px; cursor:pointer; }
+  .hs { width:0; height:0; }
+  .bm { position:absolute; left:-7px; top:-7px; width:14px; height:14px; border-radius:50%; cursor:default; }
+  .bm.open { background:var(--open); border:2px solid #000; }
+  .bm.closed { border:2.5px dashed var(--closed); box-shadow:0 0 0 1.5px #000, inset 0 0 0 1.5px #000; }
+  #pano.nobolls .bm { display:none; }
+  #empty { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--quiet); padding:30px; text-align:center; }
+</style>
+
+<header>
+  <strong>AgriEYE 360 Field Tour</strong>
+  <input id="file" type="file" accept=".json,application/json">
+  <button id="prev" disabled>&larr; Previous</button>
+  <select id="select" disabled></select>
+  <button id="next" disabled>Next &rarr;</button>
+  <label class="toggle"><input id="showBolls" type="checkbox" checked> Show bolls</label>
+  <span class="legend"><span><span class="dot open"></span>Open boll</span><span><span class="dot closed"></span>Closed boll</span></span>
+</header>
+
+<main>
+  <div id="pano"><div id="empty">Choose a tour file, e.g. agrieye_output\streetview\tour_2026-08-20.json</div></div>
+  <aside id="panel">
+    <h2 id="plant">No tour loaded</h2>
+    <div class="sub" id="when">&nbsp;</div>
+    <div class="grid" id="tiles"></div>
+    <div class="note" id="note"></div>
+    <table><thead><tr><th>Plant</th><th>Open</th><th>Closed</th><th>% diseased</th></tr></thead><tbody id="rows"></tbody></table>
+  </aside>
+</main>
+<div id="status" role="status">Choose your exported tour JSON. Images stay in this browser; the viewer library needs internet.</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marzipano@0.10.2/dist/marzipano.js"></script>
+<script>
+const el = id => document.getElementById(id);
+let viewer = null, records = [], active = 0, loading = false, generation = 0;
+
+const num = v => (v === undefined || v === null || v === '') ? null : Number(v);
+const fmt = (v, d = 0) => v === null || isNaN(v) ? '–' : (d ? v.toFixed(d) : String(Math.round(v)));
+const nice = date => { const [y, m, d] = (date || '').split('-'); const M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return d ? `${Number(d)} ${M[Number(m) - 1]} ${y}` : ''; };
+
+function controls() {
+  el('prev').disabled = loading || active === 0;
+  el('next').disabled = loading || active === records.length - 1;
+  el('select').disabled = loading || !records.length;
+  el('select').value = String(active);
+}
+
+function panel(index) {
+  const s = records[index].data, a = s.analysis || {};
+  const open = num(a.open_boll), closed = num(a.closed_boll);
+  const share = open !== null && closed !== null && open + closed > 0 ? 100 * open / (open + closed) : null;
+  el('plant').textContent = `Plant ${s.station || s.name}`;
+  el('when').textContent = `${nice(s.date)} · ${(s.bolls || []).length} bolls marked in this view`;
+  const tile = (cls, v, k) => `<div class="tile ${cls}"><div class="v">${v}</div><div class="k">${k}</div></div>`;
+  el('tiles').innerHTML =
+    tile('open', fmt(open), 'open bolls') + tile('closed', fmt(closed), 'closed bolls') +
+    tile('', share === null ? '–' : fmt(share) + '%', 'of bolls open') + tile('', fmt(num(a.pct_diseased), 1) + '%', 'diseased leaves') +
+    tile('', fmt(num(a.leaves)), 'leaves judged') + tile('', fmt(num(a.check_bolls)) + ' / ' + fmt(num(a.check_leaves)), 'to check: bolls / leaves');
+  el('note').textContent = 'Counts are the sum of the 4 views (N, E, S, W). Bolls: your hand label first, then the boll classifier (R1). ' +
+    'Leaves: leaf finder (L1) + disease classifier (L2). Drag to look around; arrows walk to the next plant.';
+  [...el('rows').children].forEach((tr, i) => tr.classList.toggle('active', i === index));
+}
+
+function table() {
+  el('rows').replaceChildren(...records.map((r, i) => {
+    const a = r.data.analysis || {}, tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.data.station || r.data.name}</td><td>${fmt(num(a.open_boll))}</td><td>${fmt(num(a.closed_boll))}</td><td>${fmt(num(a.pct_diseased), 1)}</td>`;
+    tr.onclick = () => show(i);
+    return tr;
+  }));
+}
+
+function dimensions(url) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image.naturalWidth);
+    image.onerror = () => reject(Error('Could not decode panorama image.'));
+    image.src = url;
+  });
+}
+
+function bollMarker(b) {
+  const outer = document.createElement('div'); outer.className = 'hs';
+  const dot = document.createElement('div'); dot.className = 'bm ' + (b.open ? 'open' : 'closed');
+  const src = { hand: 'your hand label', model: 'boll classifier (R1)', sam3: 'SAM 3' }[b.src] || b.src;
+  dot.title = `${b.open ? 'Open' : 'Closed'} boll · ${b.dir} view · label from ${src}`;
+  outer.appendChild(dot);
+  return outer;
+}
+
+async function show(index) {
+  if (loading || index < 0 || index >= records.length) return;
+  loading = true; const token = generation; controls();
+  el('status').textContent = 'Loading panorama…';
+  try {
+    const record = records[index];
+    if (!record.scene) {
+      const width = await dimensions(record.data.imageUrl);
+      if (token !== generation) return;
+      const view = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI / 2 },
+        Marzipano.RectilinearView.limit.traditional(width, Math.PI * 0.75));
+      record.scene = viewer.createScene({
+        source: Marzipano.ImageUrlSource.fromString(record.data.imageUrl),
+        geometry: new Marzipano.EquirectGeometry([{ width }]), view });
+      const hc = record.scene.hotspotContainer();
+      for (const b of record.data.bolls || []) hc.createHotspot(bollMarker(b), { yaw: b.yaw, pitch: b.pitch });
+      for (const link of record.data.links || []) {
+        const target = records.findIndex(r => r.data.id === link.targetId);
+        if (target < 0) continue;
+        const btn = document.createElement('button');
+        btn.className = 'hotspot'; btn.textContent = '↑';
+        btn.title = 'Go to ' + (records[target].data.name || String(target + 1));
+        btn.onclick = () => show(target);
+        hc.createHotspot(btn, { yaw: Number(link.yaw) || 0, pitch: Number(link.pitch) || 0 });
+      }
+    }
+    record.scene.switchTo({ transitionDuration: 500 });
+    active = index; panel(index);
+    el('status').textContent = `Point ${index + 1} of ${records.length}: ${record.data.description || record.data.name}`;
+  } catch (e) {
+    el('status').textContent = 'Error: ' + e.message;
+  } finally {
+    if (token === generation) { loading = false; controls(); }
+  }
+}
+
+el('file').onchange = async event => {
+  const file = event.target.files[0]; if (!file) return;
+  el('file').disabled = true;
+  try {
+    if (!window.Marzipano) throw Error('Viewer library unavailable. Check internet and reload.');
+    el('status').textContent = 'Reading JSON…';
+    const data = JSON.parse(await file.text());
+    if (!Array.isArray(data.scenes) || !data.scenes.length) throw Error('Expected a nonempty scenes array.');
+    const ids = new Set();
+    for (const s of data.scenes) {
+      if (!s.id || ids.has(s.id) || typeof s.imageUrl !== 'string' || !s.imageUrl.startsWith('data:image/'))
+        throw Error('Each scene needs a unique id and an embedded imageUrl.');
+      ids.add(s.id);
+    }
+    generation++; loading = false;
+    if (viewer) viewer.destroy();
+    el('pano').replaceChildren();
+    viewer = new Marzipano.Viewer(el('pano'));
+    records = data.scenes.map(data => ({ data, scene: null }));
+    active = 0;
+    el('select').replaceChildren(...records.map((r, i) => {
+      const o = document.createElement('option'); o.value = String(i); o.textContent = r.data.name || String(i + 1); return o;
+    }));
+    table();
+    await show(0);
+    if (!data.scenes.some(s => Array.isArray(s.bolls)))
+      el('note').textContent = 'This tour has no boll positions: re-export it with "agrieye.py streetview".';
+  } catch (e) {
+    el('status').textContent = 'Error: ' + e.message;
+  } finally {
+    el('file').disabled = false;
+  }
+};
+
+el('prev').onclick = () => show(active - 1);
+el('next').onclick = () => show(active + 1);
+el('select').onchange = e => show(Number(e.target.value));
+el('showBolls').onchange = e => el('pano').classList.toggle('nobolls', !e.target.checked);
+</script>
+</html>

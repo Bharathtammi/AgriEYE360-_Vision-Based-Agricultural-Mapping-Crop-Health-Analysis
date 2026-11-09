@@ -109,13 +109,20 @@ def main():
     lines = status.splitlines()
     print("\n".join(lines[:40]) + (f"\n... and {len(lines) - 40} more" if len(lines) > 40 else "")
           if lines else "No changes since the last commit.")
-    if not (a.commit or a.push) or not status:
+    if not (a.commit or a.push):
         if status:
             print("\nNothing committed. Run again with --commit (local) or --push (local + GitHub).")
         return
-    git("commit", "-m", a.message)
-    print(git("log", "--oneline", "-1"))
+    if status:
+        git("commit", "-m", a.message)
+        print(git("log", "--oneline", "-1"))
     if a.push:
+        git("fetch", "origin", check=False)
+        ahead = git("rev-list", "--count", "@{u}..HEAD", check=False) if git(
+            "rev-parse", "--abbrev-ref", "@{u}", check=False) else "1"
+        if ahead in ("", "0"):
+            print("GitHub is already up to date."); return
+        print(f"Pushing {ahead} commit(s) to GitHub ...")
         branch = git("rev-parse", "--abbrev-ref", "HEAD")
         r = subprocess.run(["git", "-C", str(REPO), "push", "origin", branch])
         sys.exit(r.returncode)

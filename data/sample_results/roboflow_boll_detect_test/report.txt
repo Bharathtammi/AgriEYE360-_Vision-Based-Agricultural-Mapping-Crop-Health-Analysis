@@ -1,0 +1,16 @@
+Roboflow boll detector (R2) cotton-bolls-field-view-trbz1/1 on 18 test views never used in training
+Your hand-checked boxes: open 50, closed 258.  IoU 0.5 = a box counts as found if it overlaps your box by at least 50%.
+
+WHOLE VIEW (as on the Roboflow test page)
+  mAP@50 43.6%   mAP@50:95 21.7%   all bolls at conf 0.5: precision 73.6%  recall 39.0%
+  open_boll    boxes   50   AP@50  26.8%   AP@50:95  11.0%   at conf 0.5: precision  56.2%  recall  18.0%  (found 9, false 7)   best conf 0.35: P 61.9% R 26.0%
+  closed_boll  boxes  258   AP@50  60.4%   AP@50:95  32.4%   at conf 0.5: precision  75.5%  recall  43.0%  (found 111, false 36)   best conf 0.20: P 61.5% R 60.1%
+
+2 x 2 TILES (small bolls look 2x bigger)
+  mAP@50 28.8%   mAP@50:95 10.5%   all bolls at conf 0.5: precision 46.0%  recall 46.1%
+  open_boll    boxes   50   AP@50  13.9%   AP@50:95   4.7%   at conf 0.5: precision  56.2%  recall  18.0%  (found 9, false 7)   best conf 0.35: P 39.3% R 22.0%
+  closed_boll  boxes  258   AP@50  43.6%   AP@50:95  16.3%   at conf 0.5: precision  45.4%  recall  51.6%  (found 133, false 160)   best conf 0.60: P 50.6% R 46.9%
+
+Better way: whole view  (mAP@50 43.6%)
+Precision = of the boxes the model drew, how many are real bolls of that class.
+Recall    = of your boxes, how many the model found with the right class.

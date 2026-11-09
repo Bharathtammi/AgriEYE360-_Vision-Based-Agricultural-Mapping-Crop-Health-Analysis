@@ -42,6 +42,8 @@ FIGS = [
      ROOT / "sample_results" / "boll_figures" / "00_open_vs_closed.jpg"),
     ("SAM 3 leaf outlines (P09, 31 Jul, east view): every outline is a real leaf, but some leaves have none",
      ROOT / "sample_results" / "sam3_seg_check" / "example_P09_0731_E.jpg"),
+    ("One-step boll detector on a test view (cyan = open, magenta = closed, white = hand labels)",
+     ROOT / "sample_results" / "roboflow_boll_detect_test" / "preview_P13_2026-08-20_20260820_140906_E.jpg"),
 ]
 
 F = r"C:\Windows\Fonts"

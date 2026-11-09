@@ -25,7 +25,7 @@ AgriEYE 360 turns 360° photos of a cotton plot into results for each plant:
 | SAM 3 + YOLO v2 disease, whole field | ✅ Done | 4,231 leaves judged. % diseased: 31 Jul 15.3 · 4 Aug 21.4 · 6 Aug 13.2 · 20 Aug 25.6 |
 | Boll labels: SAM 3 + hand sorting | ✅ Done 8 Nov | 3,068 boll boxes; 2,970 hand-checked: open 441 · closed 2,465 · not a boll 64 |
 | **Boll classifier (Roboflow ViT-Base)** | ✅ Trained 8 Nov | **97.7% on 355 test images** (open recall 91.7%, closed 100%, sky/cloud rejected 51/51) |
-| Boll detector (Roboflow, one step), comparison only | ✅ Trained 9 Nov | **About 41% mAP@50** (about 21% mAP@50:95) after about 320 epochs. Not used in the analysis (see 1f) |
+| Boll detector (Roboflow, one step), comparison only | ✅ Trained 9 Nov | **mAP@50 43.6%** on 18 test views (open AP 26.8%, closed AP 60.4%). Not used in the analysis (see 1f) |
 | 4-POV training datasets for Roboflow | ✅ Done 8 Nov | 5 datasets in `roboflow_export\` (see 1g) |
 | Field analysis, report, Street View | ✅ Done 8 Nov | Re-run with new plant IDs, leaf finder, disease v2 and boll labels (hand > Roboflow model > SAM 3) |
 | Disease classifier v3 (field + public data) | ⬜ Data ready, not trained | `train_disease_v3.py train` (only when you decide to train) |
@@ -107,7 +107,18 @@ Every task is done in **two steps**: SAM 3 finds the objects, then a trained cla
 ### 1f. One-step boll detector (Roboflow): comparison
 
 - **Data:** `1_cotton_boll_detection` (140 views, about 3,000 boll boxes: open 453, closed 2,544; split 94 / 28 / 18 views), project "Cotton boll labelling".
-- **Result (Roboflow training graphs):** mAP@50 rose to about 35% by epoch 40 and ended at **about 41%** after about 320 epochs; mAP@50:95 about 21%. The losses were flat after about 30 epochs (no overfitting; more epochs do not help).
+- **Roboflow id:** `cotton-bolls-field-view-trbz1/1`. Training graphs: mAP@50 about 35% by epoch 40, about 41% (validation) after about 320 epochs; losses flat after about 30 epochs.
+- **Test (18 views never used in training, 308 hand-checked boxes, `eval_roboflow_detect.py`):** Roboflow's free plan shows no metrics, so they were computed from the hosted model's answers (IoU 0.5).
+
+| Class | Boxes | AP@50 | AP@50:95 | Precision (conf 0.5) | Recall (conf 0.5) |
+|---|---|---|---|---|---|
+| open_boll | 50 | 26.8% | 11.0% | 56.2% | 18.0% |
+| closed_boll | 258 | 60.4% | 32.4% | 75.5% | 43.0% |
+| **All (mAP)** | 308 | **43.6%** | **21.7%** | 73.6% | 39.0% |
+
+- **Tiling did not help:** cutting each view into 2×2 tiles gave mAP@50 28.8% (more false closed bolls), so whole views are better for this model.
+- **What it misses:** mostly small, far-away bolls; it finds the large bolls well. Open bolls are found least (9 of 50 at conf 0.5), against 91.7% open recall for the two-step classifier.
+- Files: `F:\Project and completed courses\Agri EYE 360\sample_resultsoboflow_boll_detect_test\` (`report.txt`, `preview_*.jpg`, `predictions_*.csv`).
 - **Why it is lower:** most bolls are only 20–40 px in a 1440 px view (smaller still at 640 px input); closed bolls are green on green leaves; only 140 photos (28 for validation, so the curve is noisy); the labels come from SAM 3 boxes, so real bolls that SAM 3 missed count as false detections.
 - **Conclusion:** with this little data, **two steps (SAM 3 + classifier, 97.7%) work much better than one detector**. The analysis uses the two-step method.
 
@@ -143,7 +154,7 @@ Folder: `F:\Project and completed courses\Agri EYE 360\roboflow_export\`
 - **Training images should look like the images the model will see:** all training data now comes from the 4-POV views, not the stretched panoramas.
 - **Clouds look like open cotton** at low resolution: add sky examples, avoid brightness augmentation, and tile detection images in Roboflow.
 - **A hand check must also look for what is missing:** in the SAM 3 outline check every outline starts green, so "all green" only tells you the outlines are right, not that every leaf was found.
-- **Small objects favour two steps:** a one-step boll detector reached about 41% mAP@50, while SAM 3 + a crop classifier reached 97.7%.
+- **Small objects favour two steps:** a one-step boll detector reached 43.6% mAP@50 on test views (open bolls 26.8% AP), while SAM 3 + a crop classifier reached 97.7%.
 - **Panoramas:** the TOZO AnyVue 360 compass heading is correct (checked against the sun: east at 08:00, west at 17:00); GPS is only accurate to about 2–3 m.
 
 ---
@@ -317,6 +328,8 @@ Clear open / closed boll pictures (cyan solid = open, magenta dashed = closed):
 | `make_pov_dataset.py` | All 35 photos → 4-POV views, leaf labels projected, Roboflow datasets 3–5 |
 | `make_roboflow_datasets.py`, `export_roboflow_bolls.py` | Roboflow datasets 1–2, 70/20/10 split, sky negatives |
 | `eval_roboflow_boll.py` | Tests the Roboflow boll model on the test split |
+| `eval_roboflow_detect.py` | Tests the Roboflow boll detector (R2) on the 18 test views: mAP, precision, recall per class |
+| `list_roboflow_models.py` | Lists every project and version in the Roboflow workspace |
 | `boll_classify_roboflow.py` | Classifies every boll box with the Roboflow model for `analyze` |
 | `sam3_segment_field.py` | SAM 3 leaf segmentation of the field (`--classify` adds YOLO disease) |
 | `vlm_segment.py` | SAM 3 text-prompt segmentation of any image |

@@ -1,0 +1,33 @@
+{
+  "input_dirs": [
+    "F:\\Project and completed courses\\Agri EYE 360\\AgriEye 360 field data\\Data set\\overall dataset"
+  ],
+  "output_dir": "F:\\Project and completed courses\\Agri EYE 360\\agrieye_output",
+  "sam3_model": "F:\\Project and completed courses\\Agri EYE 360\\sam3.pt",
+
+  "pov": {
+    "fov_deg": 90,
+    "pitch_deg": 0,
+    "directions": {"N": 0, "E": 90, "S": 180, "W": 270},
+    "size": 1440
+  },
+
+  "station_radius_m": 1.5,
+
+  "objects": {
+    "prompts": {
+      "open_boll": "open cotton boll",
+      "closed_boll": "closed cotton boll",
+      "flower": "flower"
+    },
+    "conf": 0.3,
+    "tile": 960
+  },
+
+  "streetview": {
+    "image_width": 4096,
+    "jpeg_quality": 80,
+    "link_max_distance_m": 6,
+    "links_per_scene": 3
+  }
+}

@@ -1,0 +1,9 @@
+SAM 3 leaf segmentation (prompt 'leaf', conf 0.3) checked by hand on 10 views
+Outlines: 426   good 426   partial 0   wrong (not a leaf) 0   missed leaves 0
+
+Precision (outline is a real leaf, good + partial): 100.0%
+Strict precision (good outline only):               100.0%
+Recall: NOT MEASURED (no missed leaves were marked; SAM 3 visibly misses some leaves)
+Outline quality (good among real leaves):           100.0%
+
+Note: recall counts clearly visible leaves only; tiny far-away leaves are not counted as missed.

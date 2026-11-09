@@ -128,14 +128,15 @@ oboflow_boll_detect_test\` (`report.txt`, `preview_*.jpg`, `predictions_*.csv`).
 
 Folder: `F:\Project and completed courses\Agri EYE 360\roboflow_export\`
 
-| Zip | Roboflow project type | Contents |
+The zip copies were deleted on 9 Nov 2026 to save space (0.9 GB); `make_roboflow_datasets.py` and `make_pov_dataset.py export` rebuild them, and Roboflow also accepts a whole folder upload.
+
+| Folder | Roboflow project type | Contents |
 |---|---|---|
-| `1_cotton_boll_detection.zip` | Object Detection | 140 views, 3,004 boll boxes (2,906 hand-checked); split 94 / 28 / 18 views |
-| `2_cotton_boll_classification.zip` | Classification (single-label) | open 441, closed 2,465, not_boll 64 + 383 sky; split train 2,328 / valid 670 / test 355 |
-| `2_cotton_boll_classification_csv.zip` | Classification | Same data, labels in `_classes.csv` (fallback if folder labels are not read) |
-| `3_leaf_segmentation.zip` | Instance Segmentation | 140 views, about 11,200 leaf outlines |
-| `4_leaf_disease_field.zip` | Classification | Field leaves cut from the views: diseased 816, healthy 2,263 |
-| `5_leaf_disease_field_outside.zip` | Classification | Dataset 4 + 2,681 public leaves |
+| `1_cotton_boll_detection\` (upload copy: `UPLOAD_cotton_bolls_labelled\`) | Object Detection | 140 views, 3,004 boll boxes (2,906 hand-checked); split 94 / 28 / 18 views |
+| `2_cotton_boll_classification\` | Classification (single-label) | open 441, closed 2,465, not_boll 64 + 383 sky; split train 2,328 / valid 670 / test 355 |
+| `3_leaf_segmentation\` | Instance Segmentation | 140 views, about 11,200 leaf outlines |
+| `4_leaf_disease_field\` | Classification | Field leaves cut from the views: diseased 816, healthy 2,263 |
+| `5_leaf_disease_field_outside\` | Classification | Dataset 4 + 2,681 public leaves |
 
 - **Labels moved from panorama to views:** the hand-labelled leaf outlines were projected with the exact inverse of the slicer's maths (checked visually). 10,108 leaves landed on a view; 3,785 were above or below the 45° view limit.
 - **Split without leakage:** grouped by plant + visit (+ view direction for the boll sets; the 4 views do not overlap). Repeat shots always stay with their twin. The boll sets are balanced so open bolls are also 70 / 20 / 10.

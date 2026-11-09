@@ -271,7 +271,7 @@ Finds all unique 360 photos in every Data set folder, slices them, moves the han
 
 1. Optional: SAM 3 recall. Run `sam3_seg_check.py` again (after renaming `answers.json`) and right-click every clear leaf with no outline.
 2. Optional: tiled test of the Roboflow boll detector on the 18 test views (open and closed scored separately).
-3. Optional: train the leaf disease model on Roboflow (`5_leaf_disease_field_outside.zip`) or v3 locally, and compare with v2.
+3. Optional: train the leaf disease model on Roboflow (folder `roboflow_export\5_leaf_disease_field_outside\`) or v3 locally, and compare with v2.
 
 SAM 3 hand check, after sorting:
 

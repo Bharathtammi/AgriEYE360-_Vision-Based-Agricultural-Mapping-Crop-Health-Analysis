@@ -1,0 +1,15 @@
+Roboflow model cotton-boll-open-or-close-3frah/3 on the test split: 355 images (never used in training)
+Accuracy: 97.7%
+
+Confusion matrix (rows = true, columns = predicted):
+                  open_boll  closed_boll     not_boll
+open_boll                44            4            0
+closed_boll               0          252            0
+not_boll                  2            2           51
+
+class          precision    recall     n
+open_boll          95.7%     91.7%    48
+closed_boll        97.7%    100.0%   252
+not_boll          100.0%     92.7%    55
+
+sky / cloud patches called not_boll: 51 / 51

@@ -1,0 +1,2 @@
+leaf,x1,y1,x2,y2,leaf_score,label,p_diseased,needs_check
+0,43,10,870,395,0.571,healthy,0.367,1

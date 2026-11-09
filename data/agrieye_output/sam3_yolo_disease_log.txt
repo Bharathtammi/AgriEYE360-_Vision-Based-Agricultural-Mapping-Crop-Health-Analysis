@@ -1,0 +1,151 @@
+﻿Disease model: F:\Project and completed courses\Agri EYE 360\disease_autolabel\models\disease_cls\weights\best.pt
+Loading SAM 3 on cpu ...
+Ultralytics 8.4.202  Python-3.11.9 torch-2.15.0+cpu CPU (11th Gen Intel Core i5-1155G7 @ 2.50GHz)
+[1/120] P01 2026-07-31 N: leaves 35   diseased 8 (23%)   check 12   (SAM 3 segment -> YOLO disease)
+[2/120] P01 2026-07-31 E: leaves 36   diseased 3 (8%)   check 2   (SAM 3 segment -> YOLO disease)
+[3/120] P01 2026-07-31 S: leaves 37   diseased 5 (14%)   check 8   (SAM 3 segment -> YOLO disease)
+[4/120] P01 2026-07-31 W: leaves 31   diseased 7 (23%)   check 10   (SAM 3 segment -> YOLO disease)
+[5/120] P03 2026-07-31 N: leaves 37   diseased 2 (5%)   check 7   (SAM 3 segment -> YOLO disease)
+[6/120] P03 2026-07-31 E: leaves 45   diseased 2 (4%)   check 5   (SAM 3 segment -> YOLO disease)
+[7/120] P03 2026-07-31 S: leaves 33   diseased 3 (9%)   check 6   (SAM 3 segment -> YOLO disease)
+[8/120] P03 2026-07-31 W: leaves 33   diseased 1 (3%)   check 1   (SAM 3 segment -> YOLO disease)
+[9/120] P06 2026-07-31 N: leaves 43   diseased 9 (21%)   check 13   (SAM 3 segment -> YOLO disease)
+[10/120] P06 2026-07-31 E: leaves 22   diseased 2 (9%)   check 4   (SAM 3 segment -> YOLO disease)
+[11/120] P06 2026-07-31 S: leaves 34   diseased 5 (15%)   check 8   (SAM 3 segment -> YOLO disease)
+[12/120] P06 2026-07-31 W: leaves 30   diseased 6 (20%)   check 8   (SAM 3 segment -> YOLO disease)
+[13/120] P09 2026-07-31 N: leaves 35   diseased 3 (9%)   check 5   (SAM 3 segment -> YOLO disease)
+[14/120] P09 2026-07-31 E: leaves 45   diseased 6 (13%)   check 7   (SAM 3 segment -> YOLO disease)
+[15/120] P09 2026-07-31 S: leaves 39   diseased 6 (15%)   check 11   (SAM 3 segment -> YOLO disease)
+[16/120] P09 2026-07-31 W: leaves 32   diseased 3 (9%)   check 9   (SAM 3 segment -> YOLO disease)
+[17/120] P12 2026-07-31 N: leaves 30   diseased 5 (17%)   check 6   (SAM 3 segment -> YOLO disease)
+[18/120] P12 2026-07-31 E: leaves 35   diseased 7 (20%)   check 14   (SAM 3 segment -> YOLO disease)
+[19/120] P12 2026-07-31 S: leaves 39   diseased 6 (15%)   check 14   (SAM 3 segment -> YOLO disease)
+[20/120] P12 2026-07-31 W: leaves 33   diseased 1 (3%)   check 8   (SAM 3 segment -> YOLO disease)
+[21/120] P02 2026-07-31 N: leaves 42   diseased 6 (14%)   check 12   (SAM 3 segment -> YOLO disease)
+[22/120] P02 2026-07-31 E: leaves 27   diseased 9 (33%)   check 11   (SAM 3 segment -> YOLO disease)
+[23/120] P02 2026-07-31 S: leaves 34   diseased 8 (24%)   check 9   (SAM 3 segment -> YOLO disease)
+[24/120] P02 2026-07-31 W: leaves 46   diseased 8 (17%)   check 11   (SAM 3 segment -> YOLO disease)
+[25/120] P04 2026-07-31 N: leaves 35   diseased 9 (26%)   check 11   (SAM 3 segment -> YOLO disease)
+[26/120] P04 2026-07-31 E: leaves 39   diseased 5 (13%)   check 6   (SAM 3 segment -> YOLO disease)
+[27/120] P04 2026-07-31 S: leaves 18   diseased 4 (22%)   check 4   (SAM 3 segment -> YOLO disease)
+[28/120] P04 2026-07-31 W: leaves 31   diseased 2 (6%)   check 3   (SAM 3 segment -> YOLO disease)
+[29/120] P08 2026-07-31 N: leaves 18   diseased 6 (33%)   check 8   (SAM 3 segment -> YOLO disease)
+[30/120] P08 2026-07-31 E: leaves 33   diseased 3 (9%)   check 10   (SAM 3 segment -> YOLO disease)
+[31/120] P08 2026-07-31 S: leaves 29   diseased 3 (10%)   check 7   (SAM 3 segment -> YOLO disease)
+[32/120] P08 2026-07-31 W: leaves 21   diseased 3 (14%)   check 7   (SAM 3 segment -> YOLO disease)
+[33/120] P11 2026-07-31 N: leaves 33   diseased 10 (30%)   check 9   (SAM 3 segment -> YOLO disease)
+[34/120] P11 2026-07-31 E: leaves 34   diseased 4 (12%)   check 4   (SAM 3 segment -> YOLO disease)
+[35/120] P11 2026-07-31 S: leaves 34   diseased 5 (15%)   check 7   (SAM 3 segment -> YOLO disease)
+[36/120] P11 2026-07-31 W: leaves 33   diseased 10 (30%)   check 4   (SAM 3 segment -> YOLO disease)
+[37/120] P01 2026-08-04 N: leaves 28   diseased 4 (14%)   check 5   (SAM 3 segment -> YOLO disease)
+[38/120] P01 2026-08-04 E: leaves 43   diseased 12 (28%)   check 19   (SAM 3 segment -> YOLO disease)
+[39/120] P01 2026-08-04 S: leaves 39   diseased 3 (8%)   check 5   (SAM 3 segment -> YOLO disease)
+[40/120] P01 2026-08-04 W: leaves 42   diseased 9 (21%)   check 9   (SAM 3 segment -> YOLO disease)
+[41/120] P03 2026-08-04 N: leaves 43   diseased 5 (12%)   check 12   (SAM 3 segment -> YOLO disease)
+[42/120] P03 2026-08-04 E: leaves 33   diseased 4 (12%)   check 11   (SAM 3 segment -> YOLO disease)
+[43/120] P03 2026-08-04 S: leaves 48   diseased 3 (6%)   check 16   (SAM 3 segment -> YOLO disease)
+[44/120] P03 2026-08-04 W: leaves 29   diseased 3 (10%)   check 8   (SAM 3 segment -> YOLO disease)
+[45/120] P12 2026-08-04 N: leaves 41   diseased 14 (34%)   check 16   (SAM 3 segment -> YOLO disease)
+[46/120] P12 2026-08-04 E: leaves 34   diseased 8 (24%)   check 12   (SAM 3 segment -> YOLO disease)
+[47/120] P12 2026-08-04 S: leaves 40   diseased 3 (8%)   check 11   (SAM 3 segment -> YOLO disease)
+[48/120] P12 2026-08-04 W: leaves 30   diseased 0 (0%)   check 2   (SAM 3 segment -> YOLO disease)
+[49/120] P09 2026-08-04 N: leaves 35   diseased 11 (31%)   check 11   (SAM 3 segment -> YOLO disease)
+[50/120] P09 2026-08-04 E: leaves 21   diseased 5 (24%)   check 10   (SAM 3 segment -> YOLO disease)
+[51/120] P09 2026-08-04 S: leaves 37   diseased 10 (27%)   check 15   (SAM 3 segment -> YOLO disease)
+[52/120] P09 2026-08-04 W: leaves 40   diseased 5 (12%)   check 6   (SAM 3 segment -> YOLO disease)
+[53/120] P10 2026-08-04 N: leaves 42   diseased 19 (45%)   check 22   (SAM 3 segment -> YOLO disease)
+[54/120] P10 2026-08-04 E: leaves 31   diseased 7 (23%)   check 8   (SAM 3 segment -> YOLO disease)
+[55/120] P10 2026-08-04 S: leaves 36   diseased 8 (22%)   check 6   (SAM 3 segment -> YOLO disease)
+[56/120] P10 2026-08-04 W: leaves 28   diseased 5 (18%)   check 7   (SAM 3 segment -> YOLO disease)
+[57/120] P06 2026-08-04 N: leaves 32   diseased 6 (19%)   check 7   (SAM 3 segment -> YOLO disease)
+[58/120] P06 2026-08-04 E: leaves 37   diseased 6 (16%)   check 8   (SAM 3 segment -> YOLO disease)
+[59/120] P06 2026-08-04 S: leaves 36   diseased 7 (19%)   check 7   (SAM 3 segment -> YOLO disease)
+[60/120] P06 2026-08-04 W: leaves 39   diseased 1 (3%)   check 5   (SAM 3 segment -> YOLO disease)
+[61/120] P02 2026-08-04 N: leaves 29   diseased 2 (7%)   check 6   (SAM 3 segment -> YOLO disease)
+[62/120] P02 2026-08-04 E: leaves 32   diseased 17 (53%)   check 13   (SAM 3 segment -> YOLO disease)
+[63/120] P02 2026-08-04 S: leaves 41   diseased 19 (46%)   check 11   (SAM 3 segment -> YOLO disease)
+[64/120] P02 2026-08-04 W: leaves 19   diseased 0 (0%)   check 1   (SAM 3 segment -> YOLO disease)
+[69/120] P07 2026-08-04 N: leaves 27   diseased 7 (26%)   check 10   (SAM 3 segment -> YOLO disease)
+[70/120] P07 2026-08-04 E: leaves 15   diseased 8 (53%)   check 5   (SAM 3 segment -> YOLO disease)
+[71/120] P07 2026-08-04 S: leaves 35   diseased 12 (34%)   check 9   (SAM 3 segment -> YOLO disease)
+[72/120] P07 2026-08-04 W: leaves 39   diseased 4 (10%)   check 18   (SAM 3 segment -> YOLO disease)
+[73/120] P01 2026-08-06 N: leaves 33   diseased 4 (12%)   check 8   (SAM 3 segment -> YOLO disease)
+[74/120] P01 2026-08-06 E: leaves 45   diseased 11 (24%)   check 14   (SAM 3 segment -> YOLO disease)
+[75/120] P01 2026-08-06 S: leaves 27   diseased 0 (0%)   check 1   (SAM 3 segment -> YOLO disease)
+[76/120] P01 2026-08-06 W: leaves 41   diseased 6 (15%)   check 6   (SAM 3 segment -> YOLO disease)
+[77/120] P04 2026-08-06 N: leaves 39   diseased 9 (23%)   check 14   (SAM 3 segment -> YOLO disease)
+[78/120] P04 2026-08-06 E: leaves 41   diseased 7 (17%)   check 5   (SAM 3 segment -> YOLO disease)
+[79/120] P04 2026-08-06 S: leaves 30   diseased 5 (17%)   check 8   (SAM 3 segment -> YOLO disease)
+[80/120] P04 2026-08-06 W: leaves 36   diseased 0 (0%)   check 3   (SAM 3 segment -> YOLO disease)
+[81/120] P09 2026-08-06 N: leaves 43   diseased 6 (14%)   check 6   (SAM 3 segment -> YOLO disease)
+[82/120] P09 2026-08-06 E: leaves 38   diseased 9 (24%)   check 14   (SAM 3 segment -> YOLO disease)
+[83/120] P09 2026-08-06 S: leaves 32   diseased 3 (9%)   check 11   (SAM 3 segment -> YOLO disease)
+[84/120] P09 2026-08-06 W: leaves 39   diseased 0 (0%)   check 2   (SAM 3 segment -> YOLO disease)
+[85/120] P10 2026-08-06 N: leaves 34   diseased 2 (6%)   check 5   (SAM 3 segment -> YOLO disease)
+[86/120] P10 2026-08-06 E: leaves 28   diseased 1 (4%)   check 5   (SAM 3 segment -> YOLO disease)
+[87/120] P10 2026-08-06 S: leaves 37   diseased 2 (5%)   check 5   (SAM 3 segment -> YOLO disease)
+[88/120] P10 2026-08-06 W: leaves 32   diseased 2 (6%)   check 5   (SAM 3 segment -> YOLO disease)
+[89/120] P13 2026-08-06 N: leaves 41   diseased 1 (2%)   check 7   (SAM 3 segment -> YOLO disease)
+[90/120] P13 2026-08-06 E: leaves 21   diseased 5 (24%)   check 6   (SAM 3 segment -> YOLO disease)
+[91/120] P13 2026-08-06 S: leaves 45   diseased 7 (16%)   check 5   (SAM 3 segment -> YOLO disease)
+[92/120] P13 2026-08-06 W: leaves 34   diseased 10 (29%)   check 13   (SAM 3 segment -> YOLO disease)
+[93/120] P02 2026-08-06 N: leaves 48   diseased 10 (21%)   check 17   (SAM 3 segment -> YOLO disease)
+[94/120] P02 2026-08-06 E: leaves 37   diseased 2 (5%)   check 9   (SAM 3 segment -> YOLO disease)
+[95/120] P02 2026-08-06 S: leaves 43   diseased 10 (23%)   check 10   (SAM 3 segment -> YOLO disease)
+[96/120] P02 2026-08-06 W: leaves 43   diseased 5 (12%)   check 8   (SAM 3 segment -> YOLO disease)
+[97/120] P03 2026-08-20 N: leaves 34   diseased 10 (29%)   check 10   (SAM 3 segment -> YOLO disease)
+[98/120] P03 2026-08-20 E: leaves 38   diseased 11 (29%)   check 13   (SAM 3 segment -> YOLO disease)
+[99/120] P03 2026-08-20 S: leaves 41   diseased 6 (15%)   check 9   (SAM 3 segment -> YOLO disease)
+[100/120] P03 2026-08-20 W: leaves 44   diseased 18 (41%)   check 19   (SAM 3 segment -> YOLO disease)
+[101/120] P09 2026-08-20 N: leaves 38   diseased 18 (47%)   check 15   (SAM 3 segment -> YOLO disease)
+[102/120] P09 2026-08-20 E: leaves 31   diseased 7 (23%)   check 14   (SAM 3 segment -> YOLO disease)
+[103/120] P09 2026-08-20 S: leaves 34   diseased 6 (18%)   check 7   (SAM 3 segment -> YOLO disease)
+[104/120] P09 2026-08-20 W: leaves 43   diseased 9 (21%)   check 18   (SAM 3 segment -> YOLO disease)
+[105/120] P10 2026-08-20 N: leaves 38   diseased 9 (24%)   check 10   (SAM 3 segment -> YOLO disease)
+[106/120] P10 2026-08-20 E: leaves 26   diseased 7 (27%)   check 9   (SAM 3 segment -> YOLO disease)
+[107/120] P10 2026-08-20 S: leaves 40   diseased 5 (12%)   check 6   (SAM 3 segment -> YOLO disease)
+[108/120] P10 2026-08-20 W: leaves 32   diseased 11 (34%)   check 16   (SAM 3 segment -> YOLO disease)
+[109/120] P13 2026-08-20 N: leaves 44   diseased 12 (27%)   check 13   (SAM 3 segment -> YOLO disease)
+[110/120] P13 2026-08-20 E: leaves 39   diseased 16 (41%)   check 9   (SAM 3 segment -> YOLO disease)
+[111/120] P13 2026-08-20 S: leaves 34   diseased 12 (35%)   check 14   (SAM 3 segment -> YOLO disease)
+[112/120] P13 2026-08-20 W: leaves 32   diseased 9 (28%)   check 15   (SAM 3 segment -> YOLO disease)
+[113/120] P06 2026-08-20 N: leaves 36   diseased 3 (8%)   check 8   (SAM 3 segment -> YOLO disease)
+[114/120] P06 2026-08-20 E: leaves 47   diseased 6 (13%)   check 13   (SAM 3 segment -> YOLO disease)
+[115/120] P06 2026-08-20 S: leaves 36   diseased 10 (28%)   check 15   (SAM 3 segment -> YOLO disease)
+[116/120] P06 2026-08-20 W: leaves 40   diseased 10 (25%)   check 11   (SAM 3 segment -> YOLO disease)
+[117/120] P02 2026-08-20 N: leaves 37   diseased 13 (35%)   check 10   (SAM 3 segment -> YOLO disease)
+[118/120] P02 2026-08-20 E: leaves 36   diseased 9 (25%)   check 11   (SAM 3 segment -> YOLO disease)
+[119/120] P02 2026-08-20 S: leaves 34   diseased 8 (24%)   check 11   (SAM 3 segment -> YOLO disease)
+[120/120] P02 2026-08-20 W: leaves 41   diseased 4 (10%)   check 11   (SAM 3 segment -> YOLO disease)
+
+Summary: F:\Project and completed courses\Agri EYE 360\agrieye_output\sam3_yolo_disease\summary.csv
+  plant=P01  date=2026-07-31  leaf count=157  leaf % of view=22.4  leaves judged=139  diseased=23  % diseased=16.5  needs checking=32  confident diseased %=7.2
+  plant=P01  date=2026-08-04  leaf count=167  leaf % of view=25.2  leaves judged=152  diseased=28  % diseased=18.4  needs checking=38  confident diseased %=9.2
+  plant=P01  date=2026-08-06  leaf count=159  leaf % of view=23.3  leaves judged=146  diseased=21  % diseased=14.4  needs checking=29  confident diseased %=6.8
+  plant=P02  date=2026-07-31  leaf count=172  leaf % of view=17.3  leaves judged=149  diseased=31  % diseased=20.8  needs checking=43  confident diseased %=9.4
+  plant=P02  date=2026-08-04  leaf count=153  leaf % of view=15.8  leaves judged=121  diseased=38  % diseased=31.4  needs checking=31  confident diseased %=21.5
+  plant=P02  date=2026-08-06  leaf count=188  leaf % of view=20.6  leaves judged=171  diseased=27  % diseased=15.8  needs checking=44  confident diseased %=8.8
+  plant=P02  date=2026-08-20  leaf count=173  leaf % of view=28.9  leaves judged=148  diseased=34  % diseased=23.0  needs checking=43  confident diseased %=10.8
+  plant=P03  date=2026-07-31  leaf count=172  leaf % of view=22.9  leaves judged=148  diseased=8  % diseased=5.4  needs checking=19  confident diseased %=2.7
+  plant=P03  date=2026-08-04  leaf count=180  leaf % of view=24.5  leaves judged=153  diseased=15  % diseased=9.8  needs checking=47  confident diseased %=3.3
+  plant=P03  date=2026-08-20  leaf count=175  leaf % of view=28.3  leaves judged=157  diseased=45  % diseased=28.7  needs checking=51  confident diseased %=14.0
+  plant=P04  date=2026-07-31  leaf count=165  leaf % of view=20.3  leaves judged=123  diseased=20  % diseased=16.3  needs checking=24  confident diseased %=6.5
+  plant=P04  date=2026-08-06  leaf count=163  leaf % of view=26.2  leaves judged=146  diseased=21  % diseased=14.4  needs checking=30  confident diseased %=4.1
+  plant=P05  date=2026-08-04  leaf count=171  leaf % of view=17.4  leaves judged=137  diseased=38  % diseased=27.7  needs checking=38  confident diseased %=10.9
+  plant=P06  date=2026-07-31  leaf count=165  leaf % of view=18.1  leaves judged=129  diseased=22  % diseased=17.1  needs checking=33  confident diseased %=6.2
+  plant=P06  date=2026-08-04  leaf count=159  leaf % of view=30.1  leaves judged=144  diseased=20  % diseased=13.9  needs checking=27  confident diseased %=6.9
+  plant=P06  date=2026-08-20  leaf count=170  leaf % of view=37.8  leaves judged=159  diseased=29  % diseased=18.2  needs checking=47  confident diseased %=6.9
+  plant=P07  date=2026-08-04  leaf count=145  leaf % of view=20.0  leaves judged=116  diseased=31  % diseased=26.7  needs checking=42  confident diseased %=12.9
+  plant=P08  date=2026-07-31  leaf count=179  leaf % of view=8.1  leaves judged=101  diseased=15  % diseased=14.9  needs checking=32  confident diseased %=3.0
+  plant=P09  date=2026-07-31  leaf count=174  leaf % of view=23.9  leaves judged=151  diseased=18  % diseased=11.9  needs checking=32  confident diseased %=4.6
+  plant=P09  date=2026-08-04  leaf count=173  leaf % of view=14.8  leaves judged=133  diseased=31  % diseased=23.3  needs checking=42  confident diseased %=10.5
+  plant=P09  date=2026-08-06  leaf count=176  leaf % of view=22.4  leaves judged=152  diseased=18  % diseased=11.8  needs checking=33  confident diseased %=4.6
+  plant=P09  date=2026-08-20  leaf count=162  leaf % of view=24.3  leaves judged=146  diseased=40  % diseased=27.4  needs checking=54  confident diseased %=13.7
+  plant=P10  date=2026-08-04  leaf count=162  leaf % of view=24.6  leaves judged=137  diseased=39  % diseased=28.5  needs checking=43  confident diseased %=15.3
+  plant=P10  date=2026-08-06  leaf count=160  leaf % of view=19.8  leaves judged=131  diseased=7  % diseased=5.3  needs checking=20  confident diseased %=2.3
+  plant=P10  date=2026-08-20  leaf count=180  leaf % of view=15.0  leaves judged=136  diseased=32  % diseased=23.5  needs checking=41  confident diseased %=9.6
+  plant=P11  date=2026-07-31  leaf count=161  leaf % of view=15.5  leaves judged=134  diseased=29  % diseased=21.6  needs checking=24  confident diseased %=15.7
+  plant=P12  date=2026-07-31  leaf count=174  leaf % of view=20.8  leaves judged=137  diseased=19  % diseased=13.9  needs checking=42  confident diseased %=0.7
+  plant=P12  date=2026-08-04  leaf count=181  leaf % of view=26.6  leaves judged=145  diseased=25  % diseased=17.2  needs checking=41  confident diseased %=4.1
+  plant=P13  date=2026-08-06  leaf count=175  leaf % of view=22.0  leaves judged=141  diseased=23  % diseased=16.3  needs checking=31  confident diseased %=7.8
+  plant=P13  date=2026-08-20  leaf count=194  leaf % of view=17.7  leaves judged=149  diseased=49  % diseased=32.9  needs checking=51  confident diseased %=16.8

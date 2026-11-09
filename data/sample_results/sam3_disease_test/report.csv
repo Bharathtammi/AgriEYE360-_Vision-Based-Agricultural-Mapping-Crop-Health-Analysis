@@ -1,0 +1,7 @@
+rule,accuracy,diseased_recall,diseased_precision,auc,tp,fp,fn,tn
+"""diseased leaf"" picked it (score >= 0.3)",43.0,94.8,42.8,0.446,182,243,10,9
+"""diseased leaf"" picked it (score >= 0.1)",43.2,100.0,43.2,0.446,192,252,0,0
+"""leaf with brown spots"" picked it (score >= 0.3)",63.1,35.9,62.7,0.665,69,41,123,211
+"""leaf with brown spots"" picked it (score >= 0.1)",55.4,82.8,49.1,0.665,159,165,33,87
+"diseased-type score > ""healthy leaf"" score",63.7,80.2,55.6,0.749,154,123,38,129
+(reference) always say healthy,56.8,0.0,0.0,nan,0,0,192,252

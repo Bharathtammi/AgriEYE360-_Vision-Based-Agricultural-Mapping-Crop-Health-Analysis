@@ -1,0 +1,3 @@
+view,checked,not_leaf,not_leaf_pct,accuracy,confident_accuracy,model_pct_diseased,true_pct_diseased,diseased_recall,diseased_precision,not_leaf_called_diseased
+20260731_080101_E,14,1,7.1,100.0,100.0,7.7,7.7,100.0,100.0,0
+ALL,14,1,7.1,100.0,100.0,7.7,7.7,100.0,100.0,0

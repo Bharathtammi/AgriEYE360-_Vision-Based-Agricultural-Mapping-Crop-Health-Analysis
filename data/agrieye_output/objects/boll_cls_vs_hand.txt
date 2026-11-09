@@ -1,0 +1,2 @@
+Classified crops: 3068   predicted: {'closed_boll': 2600, 'open_boll': 449, 'not_boll': 18, '?': 1}   low confidence (<0.6): 73
+Agreement with your hand labels: 2832/2970 = 95.4% (includes training crops - consistency check only)

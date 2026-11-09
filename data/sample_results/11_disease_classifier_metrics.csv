@@ -1,0 +1,19 @@
+metric,value
+test leaves,835
+test diseased,289
+test healthy,546
+accuracy,0.8922
+roc_auc,0.9442
+average_precision,0.8934
+diseased precision,0.8566
+diseased recall,0.8270
+diseased f1,0.8415
+healthy precision,0.9101
+healthy recall,0.9267
+healthy f1,0.9183
+TP diseased->diseased,239
+FN diseased->healthy,50
+FP healthy->diseased,40
+TN healthy->healthy,506
+best epoch,9
+epochs run,19

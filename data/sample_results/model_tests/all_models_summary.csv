@@ -1,0 +1,7 @@
+model,test_set,items,accuracy,precision,recall,healthy_correct,auc_or_map50,map50_95
+disease classifier v1,field test leaves,835,89.2,85.7,82.7,92.7,0.957,
+disease classifier v1,outside test leaves,535,21.1,100.0,2.5,100.0,0.818,
+disease classifier v2 (current),field test leaves,835,89.2,85.7,82.7,92.7,0.944,
+disease classifier v2 (current),outside test leaves,535,22.1,100.0,3.7,100.0,0.644,
+leaf-finder (YOLO11n-seg),144 val tiles - boxes,4671,,67.4,62.8,,0.67,0.437
+leaf-finder (YOLO11n-seg),144 val tiles - masks,4671,,69.0,62.4,,0.672,0.397

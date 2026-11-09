@@ -1,0 +1,14 @@
+R1 boll classifier (cotton-boll-open-or-close-3frah/3), 355 test crops, accuracy 97.7%
+rows = your label, columns = model
+                         open_boll         closed_boll            not_boll
+open_boll                       44                   4                   0
+closed_boll                      0                 252                   0
+not_boll                         2                   2                  51
+
+R2 boll detector (cotton-bolls-field-view-trbz1/1), 18 test views, conf >= 0.5, IoU >= 0.5
+rows = your label (last row = no boll there), columns = model (last column = no box)
+                         open_boll         closed_boll     missed (no box)
+open_boll                        9                   2                  39
+closed_boll                      0                 111                 147
+background (no boll)                   7                  34                   0
+bolls found (any class): 122 of 308; right class: 120; open called closed: 2; closed called open: 0; false boxes: 41

@@ -116,9 +116,11 @@ Every task is done in **two steps**: SAM 3 finds the objects, then a trained cla
 | closed_boll | 258 | 60.4% | 32.4% | 75.5% | 43.0% |
 | **All (mAP)** | 308 | **43.6%** | **21.7%** | 73.6% | 39.0% |
 
+- **Confusion matrix (conf 0.5, IoU 0.5):** of 308 bolls, 122 got a box and 120 of those had the right class (only 2 open bolls called closed, none the other way); 186 were missed (39 of 50 open, 147 of 258 closed); 41 boxes were drawn where no boll was labelled. So R2 mostly **misses** bolls rather than mixing up open and closed. Pictures: `sample_results\confusion_matrices\` (`confusion_matrix_bolls.py`, no API key needed).
 - **Tiling did not help:** cutting each view into 2×2 tiles gave mAP@50 28.8% (more false closed bolls), so whole views are better for this model.
 - **What it misses:** mostly small, far-away bolls; it finds the large bolls well. Open bolls are found least (9 of 50 at conf 0.5), against 91.7% open recall for the two-step classifier.
-- Files: `F:\Project and completed courses\Agri EYE 360\sample_resultsoboflow_boll_detect_test\` (`report.txt`, `preview_*.jpg`, `predictions_*.csv`).
+- Files: `F:\Project and completed courses\Agri EYE 360\sample_results
+oboflow_boll_detect_test\` (`report.txt`, `preview_*.jpg`, `predictions_*.csv`).
 - **Why it is lower:** most bolls are only 20–40 px in a 1440 px view (smaller still at 640 px input); closed bolls are green on green leaves; only 140 photos (28 for validation, so the curve is noisy); the labels come from SAM 3 boxes, so real bolls that SAM 3 missed count as false detections.
 - **Conclusion:** with this little data, **two steps (SAM 3 + classifier, 97.7%) work much better than one detector**. The analysis uses the two-step method.
 
@@ -330,6 +332,7 @@ Clear open / closed boll pictures (cyan solid = open, magenta dashed = closed):
 | `eval_roboflow_boll.py` | Tests the Roboflow boll model on the test split |
 | `eval_roboflow_detect.py` | Tests the Roboflow boll detector (R2) on the 18 test views: mAP, precision, recall per class |
 | `list_roboflow_models.py` | Lists every project and version in the Roboflow workspace |
+| `confusion_matrix_bolls.py` | Confusion matrices of R1 and R2 from saved test answers (no key, no credits) |
 | `boll_classify_roboflow.py` | Classifies every boll box with the Roboflow model for `analyze` |
 | `sam3_segment_field.py` | SAM 3 leaf segmentation of the field (`--classify` adds YOLO disease) |
 | `vlm_segment.py` | SAM 3 text-prompt segmentation of any image |

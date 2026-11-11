@@ -56,11 +56,15 @@ def build():
 
 def train():
     from ultralytics import YOLO
+    import train_guard
+    P.clear_new("disease_cls_v3")
     model = YOLO("yolo11n-cls.pt")
     model.train(data=str(DATA), epochs=40, imgsz=P.CLS_IMGSZ, batch=32, device="cpu", patience=10,
-                project=str(P.MODELS), name="disease_cls_v3", exist_ok=True, save_period=1, plots=True,
+                project=str(P.MODELS), name="disease_cls_v3_new", exist_ok=True, save_period=1, plots=True,
                 verbose=False)
-    print(f"\nModel v3: {V3}")
+    # a retrained v3 replaces the previous v3 only if it is better on the v3 validation leaves (+ graphs redrawn)
+    train_guard.decide("disease_cls_v3", "cls", DATA, P.CLS_IMGSZ)
+    print(f"\nModel v3: {V3}   (compare with v2: python train_disease_v3.py compare)")
 
 
 def evaluate(model, files):

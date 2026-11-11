@@ -74,18 +74,50 @@ def figure(title, sub, path):
 def save(fig, path, note):
     fig.text(0.06, 0.012, note, fontsize=8.5, color=QUIET, va="bottom")
     fig.subplots_adjust(left=0.06, right=0.97, top=0.88, bottom=0.1)
-    fig.savefig(path); plt.close(fig)
+    import time
+    for attempt in range(5):                     # Windows: the picture may be open in a viewer for a moment
+        try:
+            fig.savefig(path); break
+        except OSError:
+            if attempt == 4:
+                print(f"Could not save {path} (is it open in another program?)")
+            time.sleep(2)
+    plt.close(fig)
     print(path)
+
+
+def args(name):
+    """Training settings Ultralytics saved next to the log (args.yaml: one 'key: value' per line)."""
+    out = {}
+    f = MODELS / name / "args.yaml"
+    if f.exists():
+        for l in f.read_text(encoding="utf-8").splitlines():
+            if ":" in l and not l.startswith(" "):
+                k, v = l.split(":", 1); out[k.strip()] = v.strip().strip("'\"")
+    return out
+
+
+def count(folder):
+    return sum(1 for p in Path(folder).rglob("*") if p.suffix.lower() in (".png", ".jpg", ".jpeg"))
+
+
+def hours(sec):
+    return f"{sec / 3600:.1f} h" if sec >= 5400 else f"{sec / 60:.0f} min"
 
 
 def l1():
     rows = load("leaf_seg")
+    a = args("leaf_seg")
+    ds = Path(a.get("data", "")).parent
     e = [r["epoch"] for r in rows]
     m50, m5095 = [100 * r["metrics/mAP50(M)"] for r in rows], [100 * r["metrics/mAP50-95(M)"] for r in rows]
     best = rows[max(range(len(rows)), key=lambda i: rows[i]["metrics/mAP50(M)"])]
+    end = ("Still rising near the last epoch: a longer run could gain a little." if best["epoch"] >= len(rows) - 3
+           else f"Best at epoch {best['epoch']:.0f}; later epochs did not improve it (best weights kept).")
     fig, top, bottom, path = figure(
         f"L1 leaf finder (YOLO11n-seg): mask mAP50 reached {max(m50):.1f}% after {len(rows)} epochs",
-        f"Validation on 144 tiles · trained on 832 tiles · batch 8 · image size 640 · {rows[-1]['time'] / 3600:.1f} h on CPU",
+        f"Validation on {count(ds / 'images' / 'val')} tiles · trained on {count(ds / 'images' / 'train')} tiles · "
+        f"batch {a.get('batch', '?')} · image size {a.get('imgsz', '?')} · {hours(rows[-1]['time'])} on CPU",
         OUT / "L1_leaf_finder_training.png")
     top.plot(e, m50, color=ACCENT, linewidth=2.4, label="mask mAP50")
     top.plot(e, m5095, color=LIGHT, linewidth=2, linestyle="--", label="mask mAP50-95")
@@ -97,20 +129,23 @@ def l1():
     loss_panel(bottom[0], rows, "train/box_loss", "val/box_loss", "Box loss", best["epoch"])
     loss_panel(bottom[1], rows, "train/seg_loss", "val/seg_loss", "Segmentation (mask) loss", best["epoch"])
     loss_panel(bottom[2], rows, "train/cls_loss", "val/cls_loss", "Class loss", best["epoch"])
-    save(fig, path, "Source: disease_autolabel/models/leaf_seg/results.csv (Ultralytics log, one row per epoch). "
-                    "Still rising at the last epoch: a longer run could gain a little.")
+    save(fig, path, f"Source: disease_autolabel/models/leaf_seg/results.csv (Ultralytics log, one row per epoch). {end}")
 
 
-def l2():
-    rows = load("disease_cls")
+def l2(name="disease_cls", label="L2 disease classifier", file="L2_disease_classifier_training.png"):
+    rows = load(name)
+    a = args(name)
+    ds = Path(a.get("data", ""))
+    n = {s: {c: count(ds / s / c) for c in ("diseased", "healthy")} for s in ("train", "val")}
     e = [r["epoch"] for r in rows]
     acc = [100 * r["metrics/accuracy_top1"] for r in rows]
     bi = max(range(len(rows)), key=lambda i: acc[i]); best = rows[bi]
     fig, top, bottom, path = figure(
-        f"L2 disease classifier v2 (YOLO11n-cls): best accuracy {acc[bi]:.1f}% at epoch {best['epoch']:.0f} of {len(rows)}",
-        f"Validation on 835 field leaves · trained on 2,924 leaves (970 diseased, 1,954 healthy) · batch 32 · image size 224 · "
-        f"{rows[-1]['time'] / 60:.0f} min on CPU · early stopping (patience 10)",
-        OUT / "L2_disease_classifier_training.png")
+        f"{label} (YOLO11n-cls): best accuracy {acc[bi]:.1f}% at epoch {best['epoch']:.0f} of {len(rows)}",
+        f"Validation on {sum(n['val'].values()):,} leaves · trained on {sum(n['train'].values()):,} leaves "
+        f"({n['train']['diseased']:,} diseased, {n['train']['healthy']:,} healthy) · batch {a.get('batch', '?')} · "
+        f"image size {a.get('imgsz', '?')} · {hours(rows[-1]['time'])} on CPU · early stopping (patience {a.get('patience', '?')})",
+        OUT / file)
     top.plot(e, acc, color=ACCENT, linewidth=2.4, marker="o", markersize=4, label="validation accuracy")
     top.annotate(f"{acc[bi]:.1f}%", (e[bi], acc[bi]), xytext=(0, 9), textcoords="offset points", ha="center", fontsize=9.5, color=INK, fontweight="bold")
     top.annotate(f"{acc[-1]:.1f}%", (e[-1], acc[-1]), xytext=(6, 0), textcoords="offset points", va="center", fontsize=9.5, color=INK)
@@ -125,12 +160,15 @@ def l2():
     lr = bottom[2]
     lr.plot(e, [1000 * r["lr/pg0"] for r in rows], color=ACCENT, linewidth=2)
     style(lr, "Learning rate (x 0.001)"); best_line(lr, best["epoch"], label=False)
-    save(fig, path, "Source: disease_autolabel/models/disease_cls/results.csv (Ultralytics log, one row per epoch). "
-                    "Training loss keeps falling after the best epoch\n"
-                    "while validation accuracy and loss do not improve: the start of overfitting, so the epoch-9 weights are kept.")
+    end = (f"Training ran {len(rows) - bi - 1} epochs past the best one without improving (overfitting starts), "
+           f"so the epoch-{best['epoch']:.0f} weights are kept." if bi < len(rows) - 1 else
+           "Best at the last epoch: a longer run could gain a little.")
+    save(fig, path, f"Source: disease_autolabel/models/{name}/results.csv (Ultralytics log, one row per epoch).\n{end}")
 
 
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     l1(); l2()
+    if (MODELS / "disease_cls_v3" / "results.csv").exists():          # v3 (field + public leaves), once trained
+        l2("disease_cls_v3", "Disease classifier v3", "L2_v3_disease_classifier_training.png")
     print(f"\nFiles: {OUT}")

@@ -266,6 +266,22 @@ Finds all unique 360 photos in every Data set folder, slices them, moves the han
 %PY% "%P%\train_disease_v3.py" compare
 ```
 
+**Every training run keeps the best model and redraws the graphs (`train_guard.py`).** `traincls`, `trainleaf` and
+`train_disease_v3.py train` train into `models\<name>_new\`, then test the NEW and the CURRENT model on the same
+validation data and keep the better one as `models\<name>\` (the folder all scripts read):
+
+| Model | Decided by | Tie-breaker | Full tie |
+|---|---|---|---|
+| Disease classifier (`disease_cls`, `disease_cls_v3`) | accuracy on the validation leaves | diseased recall | current model kept |
+| Leaf finder (`leaf_seg`) | mask mAP50 on the validation tiles | mask mAP50-95 | current model kept |
+
+- The other model is never deleted: `models\<name>_previous_<date>\` (replaced) or `models\<name>_rejected_<date>\` (not better).
+- Every decision is logged in `disease_autolabel\models	raining_history.csv`; the copies in `Results\models\` are refreshed.
+- `training_graphs.py` then redraws `sample_results	raining_graphs\` (L1, L2 and v3 once trained) from the active models' logs.
+- v3 never replaces v2 automatically: compare them with `train_disease_v3.py compare`.
+- Re-run the decision by hand: `%PY% "%P%	rain_guard.py" decide disease_cls`.
+
+
 ### 2e. This guide
 
 ```bat
@@ -340,6 +356,7 @@ Clear open / closed boll pictures (cyan solid = open, magenta dashed = closed):
 | `list_roboflow_models.py` | Lists every project and version in the Roboflow workspace |
 | `confusion_matrix_bolls.py` | Confusion matrices of R1 and R2 from saved test answers (no key, no credits) |
 | `training_graphs.py` | Roboflow-style training graphs (performance + losses per epoch) for L1 and L2 from their training logs |
+| `train_guard.py` | After every training run: keep the better of new vs current model, log it, redraw the graphs |
 | `boll_classify_roboflow.py` | Classifies every boll box with the Roboflow model for `analyze` |
 | `sam3_segment_field.py` | SAM 3 leaf segmentation of the field (`--classify` adds YOLO disease) |
 | `vlm_segment.py` | SAM 3 text-prompt segmentation of any image |

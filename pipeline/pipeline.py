@@ -224,11 +224,23 @@ def cmd_leafdata(args):
 def cmd_trainleaf(args):
     if not (LEAF_DATA / "data.yaml").exists():
         raise SystemExit("Run 'leafdata' first.")
+    import train_guard
+    clear_new("leaf_seg")
     model = ultra()(args.base)
     model.train(data=str(LEAF_DATA / "data.yaml"), epochs=args.epochs, imgsz=IMGSZ,
                 batch=args.batch, device=args.device, workers=2, patience=15,
-                project=str(MODELS), name="leaf_seg", exist_ok=True, plots=True)
+                project=str(MODELS), name="leaf_seg_new", exist_ok=True, plots=True)
+    # new vs current on the same validation tiles; the better one becomes models/leaf_seg + graphs redrawn
+    train_guard.decide("leaf_seg", "seg", LEAF_DATA / "data.yaml", IMGSZ)
     print(f"\nLeaf model: {LEAF_MODEL}")
+
+
+def clear_new(name):
+    """A '<name>_new' folder left by an interrupted run is set aside, never mixed into the new run."""
+    left = MODELS / f"{name}_new"
+    if left.exists():
+        from datetime import datetime
+        shutil.move(str(left), str(MODELS / f"{name}_interrupted_{datetime.now():%Y%m%d_%H%M}"))
 
 
 # ---------------------------------------------------------------- traincls
@@ -239,11 +251,15 @@ def cmd_traincls(args):
         raise SystemExit("Need at least ~20 crops in each of crops\\healthy and crops\\diseased "
                          "(300+ each recommended).")
     subprocess.run([sys.executable, str(ROOT / "build_disease_dataset.py")], check=True)
+    import train_guard
+    clear_new("disease_cls")
     model = ultra()(args.base)
     model.train(data=str(WORK / "dataset_cls"), epochs=args.epochs, imgsz=CLS_IMGSZ,
                 batch=args.batch, device=args.device, workers=2, patience=10,
-                project=str(MODELS), name="disease_cls", exist_ok=True,
+                project=str(MODELS), name="disease_cls_new", exist_ok=True,
                 save_period=1)  # keep every epoch's weights -> per-epoch charts (model_metrics.py)
+    # new vs current on the same (freshly built) validation leaves; the better one becomes models/disease_cls
+    train_guard.decide("disease_cls", "cls", WORK / "dataset_cls", CLS_IMGSZ)
     print(f"\nClassifier: {CLS_MODEL}")
 
 

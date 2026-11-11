@@ -1,0 +1,11 @@
+score,auc,best_accuracy,threshold,diseased_recall,diseased_precision
+"""brown spot"" spot area",0.69,73.2,0.0912,37.4,71.5
+"""brown spot"" spot confidence",0.622,65.4,0.6702,6.2,50.0
+"""leaf spot"" spot area",0.569,66.8,0.0857,17.3,56.8
+"""leaf spot"" spot confidence",0.529,66.8,0.5522,6.2,75.0
+"""hole in leaf"" spot area",0.549,67.3,0.0202,22.1,57.1
+"""hole in leaf"" spot confidence",0.552,65.7,0.4937,3.1,60.0
+"""yellow patch"" spot area",0.543,65.6,0.5819,1.0,75.0
+"""yellow patch"" spot confidence",0.524,65.4,0.7761,0.3,50.0
+"all spot prompts, area summed",0.691,71.0,0.1273,52.2,59.2
+"all spot prompts, best confidence",0.609,65.6,0.6702,9.3,51.9

@@ -60,7 +60,11 @@ Tested on 835 leaves from photos the model never saw during training. Every visi
 - Confusion matrix: 239 diseased found, 50 missed, 40 healthy wrongly flagged, 506 healthy correct.
 - Accuracy by visit: 31 Jul 92% · 4 Aug (evening light) 85% · 6 Aug 94% · 20 Aug 88%.
 - **"Needs checking" band:** leaves with a diseased probability between 0.2 and 0.8 get a yellow outline and are counted in `check_leaves`. The model is confident on 74% of leaves, and 94% of those are correct.
-- **Can SAM 3 judge disease by itself?** No. The prompt "diseased leaf" picks almost every leaf (precision 43%, AUC 0.45). The best SAM 3 rule reached 64% accuracy (AUC 0.75) versus 89% (AUC 0.944) for v2. So SAM 3 is used to **find** leaves and the trained classifier **judges** them.
+- **Can SAM 3 judge disease by itself? No (two tests).**
+  - *Test 1, whole-leaf prompts* (`sam3_disease_test.py`, 444 leaves on photo tiles): "diseased leaf" picks almost every leaf (precision 43%, AUC 0.45); best rule 64% accuracy, AUC 0.75.
+  - *Test 2, disease-spot prompts* (`sam3_spot_test.py`, all 835 test leaves, each enlarged to ~320 px): SAM 3 segments "brown spot", "leaf spot", "hole in leaf", "yellow patch"; score = share of the leaf covered by spots. Best: all spot prompts summed, AUC 0.691; "brown spot" alone 73% accuracy but finds only 37% of diseased leaves (always saying "healthy" gives 65%). "Leaf spot", "hole" and "yellow patch" are near chance (AUC 0.52-0.57).
+  - Why: SAM 3 finds distinct spots, but many diseased leaves are discoloured all over (evenly brown, dried, curled) with no separate spot. Its most confident picks are mostly right (9 of the top 12).
+  - Versus v2: 89.2% accuracy, AUC 0.944. So SAM 3 is used to **find** leaves and the trained classifier **judges** them. Files: `sample_results\sam3_spot_test\` (`report.txt`, `examples.jpg`).
 - **Outside photos:** v2 scores 22% on public close-up leaf photos. Public CC BY 4.0 datasets (Mendeley t9hgvk2h9p and SAR-CLD-2024 b3jy2p6k8w) are prepared for v3 (2,681 leaf crops).
 
 ### 1c. Boll classifier (Roboflow) and the cloud problem
@@ -338,6 +342,7 @@ Clear open / closed boll pictures (cyan solid = open, magenta dashed = closed):
 | `sam3_segment_field.py` | SAM 3 leaf segmentation of the field (`--classify` adds YOLO disease) |
 | `vlm_segment.py` | SAM 3 text-prompt segmentation of any image |
 | `sam3_disease_test.py` | Experiment: can SAM 3 judge disease by itself (no) |
+| `sam3_spot_test.py` | Experiment 2: SAM 3 segments disease spots on enlarged leaves (AUC 0.69, no) |
 | `sam3_seg_check.py` | Hand check of SAM 3 leaf outlines (good / partial / wrong, missed leaves) → precision and recall |
 | `make_boll_figures.py` | Open / closed boll pictures for the thesis (cyan solid / magenta dashed) |
 | `prepare_external.py`, `train_disease_v3.py` | Public data and disease v3 (field + outside) |

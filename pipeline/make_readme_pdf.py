@@ -46,6 +46,8 @@ FIGS = [
      ROOT / "sample_results" / "roboflow_boll_detect_test" / "preview_P13_2026-08-20_20260820_140906_E.jpg"),
     ("R1 boll classifier: confusion matrix on 355 test crops", ROOT / "sample_results" / "confusion_matrices" / "R1_confusion_matrix.png"),
     ("R2 boll detector: confusion matrix on 18 test views", ROOT / "sample_results" / "confusion_matrices" / "R2_confusion_matrix.png"),
+    ("SAM 3 alone, disease-spot prompts: highest-scored leaves (top) and diseased leaves it missed (bottom)",
+     ROOT / "sample_results" / "sam3_spot_test" / "examples.jpg"),
 ]
 
 F = r"C:\Windows\Fonts"

@@ -1,2 +1,4 @@
 date_time,model,metric,new,current,kept
 20261111_1054,boll_det,box mAP50 / box mAP50-95,46.2% (box mAP50-95 21.6%),-,NEW
+20261111_1544,boll_det,box mAP50 / box mAP50-95,46.3% (box mAP50-95 20.0%),46.2% (box mAP50-95 21.6%),NEW
+20261111_1545,boll_det,box mAP50 / box mAP50-95,46.3% (box mAP50-95 20.0%),46.2% (box mAP50-95 21.6%),OLD

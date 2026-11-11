@@ -86,15 +86,22 @@ def decide(name, kind, data, imgsz, models=None):
     print(f"\nChoosing the best model ({unit}, tie-breaker {tie}; same validation data: {data}) ...")
     s_new = score(new_w, kind, data, imgsz)
     s_cur = score(cur_w, kind, data, imgsz) if cur_w.exists() else None
-    r4 = lambda s: tuple(round(v, 4) for v in s)         # equal to 0.01 % counts as a tie
-    if s_cur is None or r4(s_new) > r4(s_cur):           # full tie -> keep the current model (results stay the same)
+    def better(a, b, margin=0.01):
+        """a better than b? Differences under 1 point are noise on these small validation sets -> tie,
+        then the tie-breaker decides (same margin); a full tie keeps the current model."""
+        for x, y in zip(a, b):
+            if abs(x - y) >= margin:
+                return x > y
+        return False
+
+    if s_cur is None or better(s_new, s_cur):           # full tie -> keep the current model (results stay the same)
         if cur.exists():
             shutil.move(str(cur), str(MODELS / f"{name}_previous_{stamp}"))
         shutil.move(str(new), str(cur))
         kept, other = "NEW", (f"old model kept as {name}_previous_{stamp}" if s_cur is not None else "no old model")
     else:
         shutil.move(str(new), str(MODELS / f"{name}_rejected_{stamp}"))
-        kept = "OLD" if r4(s_new) < r4(s_cur) else "OLD (tie)"
+        kept = "OLD" if better(s_cur, s_new) else "OLD (tie within 1 point)"
         other = f"new model kept as {name}_rejected_{stamp}"
     shutil.rmtree(MODELS / "_val_tmp", ignore_errors=True)
     refresh_copy(name)

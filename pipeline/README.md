@@ -123,6 +123,7 @@ Every task is done in **two steps**: SAM 3 finds the objects, then a trained cla
 
 - **Confusion matrix (conf 0.5, IoU 0.5):** of 308 bolls, 122 got a box and 120 of those had the right class (only 2 open bolls called closed, none the other way); 186 were missed (39 of 50 open, 147 of 258 closed); 41 boxes were drawn where no boll was labelled. So R2 mostly **misses** bolls rather than mixing up open and closed. Pictures: `sample_results\confusion_matrices\` (`confusion_matrix_bolls.py`, no API key needed).
 - **Local YOLO11n detector, 30 epochs, image size 1280** (`train_boll_detector.py`, same 140 views and split, 53 min on CPU, best epoch 26). Test views (18): **mAP@50 52.5% with the same scoring as R2** (our script, duplicate boxes merged at overlap 0.5; open AP 42.5%, closed AP 62.5%), against **43.6% for R2** scored the same way, so +9 points, mainly on open bolls. **With Ultralytics' default settings** (overlap 0.7, as in the training stats) the same model gives **47.9% on the test views and 46.2% on the validation views**; the gap is duplicate boxes on touching bolls. The bigger input keeps small bolls visible. Still far below the two-step R1 (97.7%), so the pipeline is unchanged; the model is stored in `agrieye_output\boll_detector\` where `analyze` does not use it.
+- **20 vs 30 epochs** (same settings, 18 test views): 20 epochs gave mAP@50 49.9% (same scoring as R2) / 45.8% (Ultralytics default), 30 epochs 52.5% / 47.9%; open bolls 39.4% vs 42.5% AP. On validation they tied (46.3% vs 46.2%), so the stricter mAP50-95 (20.0% vs 21.6%) kept the **30-epoch model**. Reports: `sample_results\local_boll_detect_test\report_20ep.txt`, `report_30ep.txt`.
 - **Tiling did not help:** cutting each view into 2×2 tiles gave mAP@50 28.8% (more false closed bolls), so whole views are better for this model.
 - **What it misses:** mostly small, far-away bolls; it finds the large bolls well. Open bolls are found least (9 of 50 at conf 0.5), against 91.7% open recall for the two-step classifier.
 - Files: `F:\Project and completed courses\Agri EYE 360\sample_results
@@ -274,8 +275,10 @@ validation data and keep the better one as `models\<name>\` (the folder all scri
 | Model | Decided by | Tie-breaker | Full tie |
 |---|---|---|---|
 | Disease classifier (`disease_cls`, `disease_cls_v3`) | accuracy on the validation leaves | diseased recall | current model kept |
+| Boll detector (`boll_det`, `train_boll_detector.py`) | box mAP50 on the 28 validation views | box mAP50-95 | current model kept |
 | Leaf finder (`leaf_seg`) | mask mAP50 on the validation tiles | mask mAP50-95 | current model kept |
 
+- **Differences under 1 point count as a tie** (noise on these small validation sets); then the tie-breaker decides, again with a 1-point margin.
 - The other model is never deleted: `models\<name>_previous_<date>\` (replaced) or `models\<name>_rejected_<date>\` (not better).
 - Every decision is logged in `disease_autolabel\models	raining_history.csv`; the copies in `Results\models\` are refreshed.
 - `training_graphs.py` then redraws `sample_results	raining_graphs\` (L1, L2 and v3 once trained) from the active models' logs.

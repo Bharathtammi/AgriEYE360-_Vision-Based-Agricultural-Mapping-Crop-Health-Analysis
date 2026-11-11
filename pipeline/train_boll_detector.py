@@ -50,16 +50,25 @@ def train(a):
         hsv_v=0.0, hsv_s=0.3, hsv_h=0.01,                # no brightness change: clouds vs open cotton
         fliplr=0.5, degrees=10, mosaic=1.0,
         project=str(HOME), name=f"{NAME}_new", exist_ok=True, plots=True, verbose=False)
+    import time
+    t0 = time.time()
     train_guard.decide(NAME, "det", YAML, a.imgsz, models=HOME)
-    test(a.imgsz)
+    test(a.imgsz)                                        # the active (kept) model -> report.txt
+    rejected = [d for d in HOME.glob(f"{NAME}_rejected_*") if d.stat().st_mtime >= t0 - 5]
+    for d in rejected:                                   # the run that was NOT kept is tested too, for the record
+        test(a.imgsz, run=d, active=False)
 
 
-def test(imgsz=1280):
-    """Same test as R2: the 18 test views, IoU 0.5, conf 0.5 for precision / recall."""
+def test(imgsz=1280, run=None, active=True):
+    """The 18 test views, two scorings:
+    - same as R2 (eval_roboflow_detect.py): duplicate boxes merged at overlap 0.5, our AP formula
+    - Ultralytics default val on the test split (overlap 0.7), the same setting as the training stats.
+    Writes report_<epochs>ep.txt for every model tested; report.txt = the active model."""
     from ultralytics import YOLO
     from PIL import Image
     import eval_roboflow_detect as E
-    w = HOME / NAME / "weights" / "best.pt"
+    run = Path(run) if run else HOME / NAME
+    w = run / "weights" / "best.pt"
     if not w.exists():
         raise SystemExit(f"No trained detector yet: {w}")
     model = YOLO(str(w))
@@ -72,15 +81,28 @@ def test(imgsz=1280):
                          for b, s, c in zip(r.boxes.xyxy.tolist(), r.boxes.conf.tolist(), r.boxes.cls.tolist())]
     rows, s = E.evaluate(preds, gts)
     a = {}
-    argf = HOME / NAME / "args.yaml"
+    argf = run / "args.yaml"
     if argf.exists():
         a = {l.split(":", 1)[0]: l.split(":", 1)[1].strip() for l in argf.read_text().splitlines() if ":" in l and not l.startswith(" ")}
-    lines = [f"Local YOLO11n boll detector ({a.get('epochs', '?')} epochs, image size {a.get('imgsz', imgsz)}) "
-             f"on the 18 test views never used in training", ""] + rows + ["",
-             f"Roboflow R2 on the same views: mAP@50 {R2['map50']}%  mAP@50:95 {R2['map']}%  "
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:          # Ultralytics' own scoring, default settings
+        u = model.val(data=str(data_yaml()), split="test", imgsz=imgsz, batch=4, device="cpu", plots=False,
+                      verbose=False, project=tmp, name="t", exist_ok=True)
+    ub = u.box
+    ep = a.get("epochs", "?")
+    lines = [f"Local YOLO11n boll detector ({ep} epochs, image size {a.get('imgsz', imgsz)}) on the 18 test views "
+             f"never used in training   [{'ACTIVE model' if active else 'not kept (' + run.name + ')'}]", "",
+             "A) Same scoring as Roboflow R2 (duplicate boxes merged at overlap 0.5):"] + rows + ["",
+             "B) Ultralytics default scoring (overlap 0.7, as in the training stats):",
+             f"  mAP@50 {100 * ub.map50:.1f}%   mAP@50:95 {100 * ub.map:.1f}%   precision {100 * ub.mp:.1f}%   recall {100 * ub.mr:.1f}%   "
+             f"open AP@50 {100 * ub.ap50[0]:.1f}%   closed AP@50 {100 * ub.ap50[1]:.1f}%", "",
+             f"Roboflow R2 on the same views, scoring A: mAP@50 {R2['map50']}%  mAP@50:95 {R2['map']}%  "
              f"open AP {R2['open_ap']}%  closed AP {R2['closed_ap']}%  precision {R2['P']}%  recall {R2['R']}%",
              "Two-step pipeline (SAM 3 finds, R1 judges): 97.7% open/closed on boll crops (a different task)."]
     TEST_OUT.mkdir(parents=True, exist_ok=True)
+    (TEST_OUT / f"report_{ep}ep.txt").write_text("\n".join(lines), encoding="utf-8")
+    if not active:
+        print("\n".join(lines)); return
     (TEST_OUT / "report.txt").write_text("\n".join(lines), encoding="utf-8")
     with open(TEST_OUT / "predictions.csv", "w", newline="") as fh:
         wr = csv.writer(fh); wr.writerow(["image", "class", "confidence", "x1", "y1", "x2", "y2"])

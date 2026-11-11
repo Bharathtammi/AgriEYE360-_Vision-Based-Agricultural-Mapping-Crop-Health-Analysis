@@ -1,8 +1,12 @@
-Local YOLO11n boll detector (30 epochs, image size 1280) on the 18 test views never used in training
+Local YOLO11n boll detector (30 epochs, image size 1280) on the 18 test views never used in training   [ACTIVE model]
 
+A) Same scoring as Roboflow R2 (duplicate boxes merged at overlap 0.5):
   mAP@50 52.5%   mAP@50:95 24.6%   all bolls at conf 0.5: precision 84.9%  recall 25.6%
   open_boll    boxes   50   AP@50  42.5%   AP@50:95  17.4%   at conf 0.5: precision  57.1%  recall  16.0%  (found 8, false 6)   best conf 0.15: P 46.4% R 52.0%
   closed_boll  boxes  258   AP@50  62.5%   AP@50:95  31.8%   at conf 0.5: precision  89.9%  recall  27.5%  (found 71, false 8)   best conf 0.25: P 65.7% R 55.0%
 
-Roboflow R2 on the same views: mAP@50 43.6%  mAP@50:95 21.7%  open AP 26.8%  closed AP 60.4%  precision 73.6%  recall 39.0%
+B) Ultralytics default scoring (overlap 0.7, as in the training stats):
+  mAP@50 47.9%   mAP@50:95 24.1%   precision 55.4%   recall 49.3%   open AP@50 35.8%   closed AP@50 60.1%
+
+Roboflow R2 on the same views, scoring A: mAP@50 43.6%  mAP@50:95 21.7%  open AP 26.8%  closed AP 60.4%  precision 73.6%  recall 39.0%
 Two-step pipeline (SAM 3 finds, R1 judges): 97.7% open/closed on boll crops (a different task).

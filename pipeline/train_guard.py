@@ -50,8 +50,10 @@ def score(weights, kind, data, imgsz):
         ok = sum(l == c for (l, _), (_, c) in zip(out, files))
         dis = [(l, c) for (l, _), (_, c) in zip(out, files) if c == "diseased"]
         return ok / max(1, len(files)), sum(l == "diseased" for l, _ in dis) / max(1, len(dis))
-    r = m.val(data=str(data), split="val", imgsz=imgsz, batch=16, device="cpu", plots=False, verbose=False,
-              project=str(MODELS / "_val_tmp"), name="val", exist_ok=True)
+    r = m.val(data=str(data), split="val", imgsz=imgsz, batch=4 if kind == "det" else 16, device="cpu", plots=False,
+              verbose=False, project=str(MODELS / "_val_tmp"), name="val", exist_ok=True)
+    if kind == "det":                                    # boll detector: box mAP50, tie-breaker box mAP50-95
+        return float(r.box.map50), float(r.box.map)
     return float(r.seg.map50), float(r.seg.map)
 
 
@@ -68,14 +70,19 @@ def refresh_copy(name):
         shutil.copy2(src, dst)
 
 
-def decide(name, kind, data, imgsz):
-    """Compare <name>_new with <name>; keep the better as <name>. Returns a short message."""
+def decide(name, kind, data, imgsz, models=None):
+    """Compare <name>_new with <name>; keep the better as <name>. Returns a short message.
+    models: folder holding the model folders (default disease_autolabel/models)."""
+    global MODELS, HISTORY
+    if models is not None:
+        MODELS, HISTORY = Path(models), Path(models) / "training_history.csv"
     new, cur = MODELS / f"{name}_new", MODELS / name
     new_w, cur_w = new / "weights" / "best.pt", cur / "weights" / "best.pt"
     if not new_w.exists():
         raise SystemExit(f"No new model found: {new_w}")
     stamp = datetime.now().strftime("%Y%m%d_%H%M")
-    unit, tie = ("accuracy", "diseased recall") if kind == "cls" else ("mask mAP50", "mask mAP50-95")
+    unit, tie = {"cls": ("accuracy", "diseased recall"), "seg": ("mask mAP50", "mask mAP50-95"),
+                 "det": ("box mAP50", "box mAP50-95")}[kind]
     print(f"\nChoosing the best model ({unit}, tie-breaker {tie}; same validation data: {data}) ...")
     s_new = score(new_w, kind, data, imgsz)
     s_cur = score(cur_w, kind, data, imgsz) if cur_w.exists() else None

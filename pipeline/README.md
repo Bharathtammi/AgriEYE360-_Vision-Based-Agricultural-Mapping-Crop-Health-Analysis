@@ -122,6 +122,7 @@ Every task is done in **two steps**: SAM 3 finds the objects, then a trained cla
 | **All (mAP)** | 308 | **43.6%** | **21.7%** | 73.6% | 39.0% |
 
 - **Confusion matrix (conf 0.5, IoU 0.5):** of 308 bolls, 122 got a box and 120 of those had the right class (only 2 open bolls called closed, none the other way); 186 were missed (39 of 50 open, 147 of 258 closed); 41 boxes were drawn where no boll was labelled. So R2 mostly **misses** bolls rather than mixing up open and closed. Pictures: `sample_results\confusion_matrices\` (`confusion_matrix_bolls.py`, no API key needed).
+- **Local YOLO11n detector, 30 epochs, image size 1280** (`train_boll_detector.py`, same 140 views and split, 53 min on CPU, best epoch 26): **mAP@50 52.5%** on the same 18 test views (mAP@50:95 24.6%; open AP 42.5%, closed AP 62.5%; precision 84.9%, recall 25.6% at conf 0.5). It beats R2 (43.6%), mainly on open bolls (+15.7 points), because the bigger input keeps small bolls visible. Still far below the two-step R1 (97.7%), so the pipeline is unchanged; the model is stored in `agrieye_outputoll_detector\` where `analyze` does not use it.
 - **Tiling did not help:** cutting each view into 2×2 tiles gave mAP@50 28.8% (more false closed bolls), so whole views are better for this model.
 - **What it misses:** mostly small, far-away bolls; it finds the large bolls well. Open bolls are found least (9 of 50 at conf 0.5), against 91.7% open recall for the two-step classifier.
 - Files: `F:\Project and completed courses\Agri EYE 360\sample_results
@@ -357,6 +358,7 @@ Clear open / closed boll pictures (cyan solid = open, magenta dashed = closed):
 | `confusion_matrix_bolls.py` | Confusion matrices of R1 and R2 from saved test answers (no key, no credits) |
 | `training_graphs.py` | Roboflow-style training graphs (performance + losses per epoch) for L1 and L2 from their training logs |
 | `train_guard.py` | After every training run: keep the better of new vs current model, log it, redraw the graphs |
+| `train_boll_detector.py` | Local YOLO11n boll detector (train / test on the 18 test views, same scoring as R2) |
 | `boll_classify_roboflow.py` | Classifies every boll box with the Roboflow model for `analyze` |
 | `sam3_segment_field.py` | SAM 3 leaf segmentation of the field (`--classify` adds YOLO disease) |
 | `vlm_segment.py` | SAM 3 text-prompt segmentation of any image |

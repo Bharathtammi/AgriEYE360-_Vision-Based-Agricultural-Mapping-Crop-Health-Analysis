@@ -50,6 +50,7 @@ FIGS = [
      ROOT / "sample_results" / "sam3_spot_test" / "examples.jpg"),
     ("L2 disease classifier: training per epoch", ROOT / "sample_results" / "training_graphs" / "L2_disease_classifier_training.png"),
     ("L1 leaf finder: training per epoch", ROOT / "sample_results" / "training_graphs" / "L1_leaf_finder_training.png"),
+    ("Local boll detector (YOLO11n, 30 epochs, 1280 px): training per epoch", ROOT / "sample_results" / "training_graphs" / "boll_detector_training.png"),
 ]
 
 F = r"C:\Windows\Fonts"

@@ -166,9 +166,46 @@ def l2(name="disease_cls", label="L2 disease classifier", file="L2_disease_class
     save(fig, path, f"Source: disease_autolabel/models/{name}/results.csv (Ultralytics log, one row per epoch).\n{end}")
 
 
+BOLL = ROOT / "agrieye_output" / "boll_detector"
+
+
+def boll():
+    """Local boll detector (train_boll_detector.py), once trained."""
+    global MODELS
+    keep, MODELS = MODELS, BOLL
+    try:
+        rows, a = load("boll_det"), args("boll_det")
+    finally:
+        MODELS = keep
+    e = [r["epoch"] for r in rows]
+    m50, m5095 = [100 * r["metrics/mAP50(B)"] for r in rows], [100 * r["metrics/mAP50-95(B)"] for r in rows]
+    bi = max(range(len(rows)), key=lambda i: m50[i]); best = rows[bi]
+    data = ROOT / "roboflow_export" / "1_cotton_boll_detection"
+    fig, top, bottom, path = figure(
+        f"Local boll detector (YOLO11n): mAP50 {m50[bi]:.1f}% at epoch {best['epoch']:.0f} of {len(rows)}",
+        f"Validation on {count(data / 'valid' / 'images')} views · trained on {count(data / 'train' / 'images')} views "
+        f"(open / closed bolls) · batch {a.get('batch', '?')} · image size {a.get('imgsz', '?')} · {hours(rows[-1]['time'])} on CPU",
+        OUT / "boll_detector_training.png")
+    top.plot(e, m50, color=ACCENT, linewidth=2.4, label="mAP50")
+    top.plot(e, m5095, color=LIGHT, linewidth=2, linestyle="--", label="mAP50-95")
+    top.annotate(f"{m50[bi]:.1f}%", (e[bi], m50[bi]), xytext=(0, 9), textcoords="offset points", ha="center",
+                 fontsize=9.5, color=INK, fontweight="bold")
+    top.axhline(43.6, color=GREY, linewidth=1, linestyle="-.")
+    top.text(e[0], 43.6, "  Roboflow R2 (test views): 43.6%", va="bottom", fontsize=8.5, color=QUIET)
+    style(top, "Model performance (validation)", pct=True); top.set_ylim(0, max(max(m50), 43.6) * 1.32)
+    best_line(top, best["epoch"]); top.legend(frameon=False, fontsize=9.5, loc="lower right")
+    loss_panel(bottom[0], rows, "train/box_loss", "val/box_loss", "Box loss", best["epoch"])
+    loss_panel(bottom[1], rows, "train/cls_loss", "val/cls_loss", "Class loss", best["epoch"])
+    loss_panel(bottom[2], rows, "train/dfl_loss", "val/dfl_loss", "Distribution focal loss", best["epoch"])
+    save(fig, path, "Source: agrieye_output/boll_detector/boll_det/results.csv (Ultralytics log, one row per epoch). "
+                    "The R2 line is its score on the 18 test views (this chart: 28 validation views).")
+
+
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     l1(); l2()
+    if (BOLL / "boll_det" / "results.csv").exists():
+        boll()
     if (MODELS / "disease_cls_v3" / "results.csv").exists():          # v3 (field + public leaves), once trained
         l2("disease_cls_v3", "Disease classifier v3", "L2_v3_disease_classifier_training.png")
     print(f"\nFiles: {OUT}")

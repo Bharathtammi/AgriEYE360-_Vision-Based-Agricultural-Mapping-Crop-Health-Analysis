@@ -1,0 +1,6 @@
+path: F:/Project and completed courses/Agri EYE 360/roboflow_export/1_cotton_boll_detection
+train: train/images
+val: valid/images
+test: test/images
+nc: 2
+names: ['open_boll', 'closed_boll']

@@ -201,11 +201,80 @@ def boll():
                     "The R2 line is its score on the 18 test views (this chart: 28 validation views).")
 
 
+def boll_compare():
+    """All boll-detector runs side by side: validation curves (left) and test scores (right)."""
+    import re
+    global MODELS
+    runs = []
+    for d in sorted(BOLL.glob("boll_det*")):
+        if not (d / "results.csv").exists() or d.name.endswith("_new"):
+            continue
+        keep, MODELS = MODELS, BOLL
+        try:
+            rows, a = load(d.name), args(d.name)
+        finally:
+            MODELS = keep
+        ep = a.get("epochs", "?")
+        rep = ROOT / "sample_results" / "local_boll_detect_test" / f"report_{ep}ep.txt"
+        ta = tb = None
+        if rep.exists():
+            t = rep.read_text(encoding="utf-8")
+            m = re.search(r"A\).*?\n\s+mAP@50 ([\d.]+)%", t, re.S); ta = float(m.group(1)) if m else None
+            m = re.search(r"B\).*?\n\s+mAP@50 ([\d.]+)%", t, re.S); tb = float(m.group(1)) if m else None
+        runs.append(dict(ep=int(ep), active=d.name == "boll_det", rows=rows, ta=ta, tb=tb))
+    if len(runs) < 2:
+        return
+    runs.sort(key=lambda r: r["ep"])
+    fig, (ax, bx) = plt.subplots(1, 2, figsize=(14, 5.6), dpi=140, gridspec_kw=dict(width_ratios=[1.5, 1]))
+    act = next(r for r in runs if r["active"])
+    fig.text(0.05, 0.95, f"Boll detector: {act['ep']} epochs is best ({act['tb']:.1f}% test mAP50, default scoring)",
+             fontsize=15, fontweight="bold", color=INK)
+    fig.text(0.05, 0.905, "YOLO11n, image size 1280, same 140 views and split for every run; "
+             "the kept model is chosen on validation only (differences under 1 point = tie)", fontsize=10, color=QUIET)
+    shades = ["#b8bec4", "#8a949e", "#5c6670"]
+    ends = []
+    for i, r in enumerate(runs):
+        e = [x["epoch"] for x in r["rows"]]; m = [100 * x["metrics/mAP50(B)"] for x in r["rows"]]
+        col, lw = (ACCENT, 2.6) if r["active"] else (shades[i % 3], 1.8)
+        ax.plot(e, m, color=col, linewidth=lw, zorder=3 if r["active"] else 2)
+        ends.append((m[-1], e[-1], r, col))
+    xmax = max(r["ep"] for r in runs)
+    lab_x, ys = xmax + 1.5, []                            # labels in a column right of the curves, kept apart
+    for v, ex, r, col in sorted(ends, key=lambda t: t[0]):
+        y = max(v, ys[-1] + 2.2) if ys else v
+        ys.append(y)
+        ax.plot([ex, lab_x - 0.3], [v, y], color=col, linewidth=0.8, linestyle=":")
+        ax.text(lab_x, y, f"{r['ep']} epochs" + (" (kept)" if r["active"] else ""), va="center", fontsize=9.5,
+                color=INK if r["active"] else QUIET, fontweight="bold" if r["active"] else "normal")
+    style(ax, "Validation mAP50 per epoch (28 views)", pct=True); ax.set_xlim(0, xmax + 10)
+    x = range(len(runs)); w = 0.36
+    for k, (key, lab, off) in enumerate((("tb", "Ultralytics default", -w / 2), ("ta", "same scoring as R2", w / 2))):
+        vals = [r[key] or 0 for r in runs]
+        cols = [(ACCENT if r["active"] else GREY) for r in runs]
+        bars = bx.bar([i + off for i in x], vals, width=w, color=cols, alpha=1.0 if k == 0 else 0.45, label=lab)
+        for b_, v in zip(bars, vals):
+            bx.text(b_.get_x() + b_.get_width() / 2, v + 0.8, f"{v:.1f}", ha="center", fontsize=9, color=INK)
+    bx.axhline(43.6, color=GREY, linestyle="-.", linewidth=1, label="Roboflow R2: 43.6% (same scoring as R2)")
+    bx.set_xticks(list(x), [f"{r['ep']} epochs" for r in runs])
+    style(bx, "Test mAP50 (18 views)", pct=True); bx.set_xlabel(""); bx.set_ylim(0, 65); bx.set_xlim(-0.65, len(runs) - 0.35)
+    bx.legend(frameon=False, fontsize=8.5, loc="upper left")
+    fig.subplots_adjust(left=0.05, right=0.98, top=0.82, bottom=0.1, wspace=0.18)
+    path = OUT / "boll_detector_epochs_compare.png"
+    import time
+    for attempt in range(5):
+        try:
+            fig.savefig(path); break
+        except OSError:
+            time.sleep(2)
+    plt.close(fig); print(path)
+
+
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     l1(); l2()
     if (BOLL / "boll_det" / "results.csv").exists():
         boll()
+        boll_compare()
     if (MODELS / "disease_cls_v3" / "results.csv").exists():          # v3 (field + public leaves), once trained
         l2("disease_cls_v3", "Disease classifier v3", "L2_v3_disease_classifier_training.png")
     print(f"\nFiles: {OUT}")

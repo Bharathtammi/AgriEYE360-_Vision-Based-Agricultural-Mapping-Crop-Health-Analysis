@@ -48,6 +48,8 @@ FIGS = [
     ("R2 boll detector: confusion matrix on 18 test views", ROOT / "sample_results" / "confusion_matrices" / "R2_confusion_matrix.png"),
     ("SAM 3 alone, disease-spot prompts: highest-scored leaves (top) and diseased leaves it missed (bottom)",
      ROOT / "sample_results" / "sam3_spot_test" / "examples.jpg"),
+    ("L2 disease classifier: training per epoch", ROOT / "sample_results" / "training_graphs" / "L2_disease_classifier_training.png"),
+    ("L1 leaf finder: training per epoch", ROOT / "sample_results" / "training_graphs" / "L1_leaf_finder_training.png"),
 ]
 
 F = r"C:\Windows\Fonts"

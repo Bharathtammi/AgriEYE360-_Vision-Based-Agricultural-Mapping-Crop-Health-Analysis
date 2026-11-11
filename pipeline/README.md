@@ -58,6 +58,7 @@ Tested on 835 leaves from photos the model never saw during training. Every visi
 | Healthy | 91.0% | 92.7% |
 
 - Confusion matrix: 239 diseased found, 50 missed, 40 healthy wrongly flagged, 506 healthy correct.
+- **Training:** 2,924 training leaves, batch 32, image size 224; 19 epochs run (17 min on CPU), **best epoch 9** kept as `best.pt` (early stopping, patience 10). Leaf finder L1: 60 epochs (6 h), best epoch 59. Graphs: `sample_results	raining_graphs\`.
 - Accuracy by visit: 31 Jul 92% · 4 Aug (evening light) 85% · 6 Aug 94% · 20 Aug 88%.
 - **"Needs checking" band:** leaves with a diseased probability between 0.2 and 0.8 get a yellow outline and are counted in `check_leaves`. The model is confident on 74% of leaves, and 94% of those are correct.
 - **Can SAM 3 judge disease by itself? No (two tests).**
@@ -338,6 +339,7 @@ Clear open / closed boll pictures (cyan solid = open, magenta dashed = closed):
 | `eval_roboflow_detect.py` | Tests the Roboflow boll detector (R2) on the 18 test views: mAP, precision, recall per class |
 | `list_roboflow_models.py` | Lists every project and version in the Roboflow workspace |
 | `confusion_matrix_bolls.py` | Confusion matrices of R1 and R2 from saved test answers (no key, no credits) |
+| `training_graphs.py` | Roboflow-style training graphs (performance + losses per epoch) for L1 and L2 from their training logs |
 | `boll_classify_roboflow.py` | Classifies every boll box with the Roboflow model for `analyze` |
 | `sam3_segment_field.py` | SAM 3 leaf segmentation of the field (`--classify` adds YOLO disease) |
 | `vlm_segment.py` | SAM 3 text-prompt segmentation of any image |

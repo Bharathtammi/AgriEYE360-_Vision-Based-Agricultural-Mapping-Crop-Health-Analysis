@@ -58,6 +58,18 @@ def main():
     views = defaultdict(list)
     for r in csv.DictReader(open(CROPS / "manifest.csv", encoding="utf-8")):
         views[r["pov"]].append(r)
+    # bolls SAM 3 missed, found by find_missed_bolls.py and accepted by you (boll_candidates/open, /closed)
+    cand_dir = OUT / "boll_candidates"
+    n_added = 0
+    if (cand_dir / "manifest.csv").exists():
+        for lab in ("open", "closed"):
+            for f in (cand_dir / lab).glob("*.jpg"):
+                hand[f.name] = lab
+        for r in csv.DictReader(open(cand_dir / "manifest.csv", encoding="utf-8")):
+            if hand.get(r["crop"]) in ("open", "closed") and r["pov"] in views:
+                views[r["pov"]].append(r); n_added += 1
+    if n_added:
+        print(f"Adding {n_added} bolls you accepted from the missed-boll candidates")
 
     if DST.exists():
         shutil.rmtree(DST)
@@ -87,7 +99,8 @@ def main():
         lines, boxes = [], []
         for r in rs:
             if r["crop"] in hand:
-                cls, source = HAND[hand[r["crop"]]], "hand-checked"
+                cls, source = HAND[hand[r["crop"]]], ("added by hand (missed by SAM 3)" if r["crop"].startswith("m_")
+                                                      else "hand-checked")
             elif r["crop"] in model and model[r["crop"]] in MODEL:
                 cls, source = MODEL[model[r["crop"]]], "boll model"
             else:

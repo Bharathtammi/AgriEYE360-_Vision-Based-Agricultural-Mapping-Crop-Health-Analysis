@@ -15,7 +15,9 @@ Look at what is inside the GREEN box of each crop:
 Pages come in the order: SAM "open" -> SAM "flower" -> SAM "closed".
 Run:
   "C:\\Users\\bhara\\Downloads\\.venv\\Scripts\\python.exe" "F:\\Project and completed courses\\Agri EYE 360\\sort_bolls_grid.py"
+Missed-boll candidates (find_missed_bolls.py): add  --dir boll_candidates
 """
+import argparse
 import csv
 import shutil
 import time
@@ -24,8 +26,11 @@ from pathlib import Path
 
 from PIL import Image, ImageTk
 
-DIR = Path(__file__).resolve().parent / "agrieye_output" / "boll_crops"
+_ap = argparse.ArgumentParser()
+_ap.add_argument("--dir", default="boll_crops", help="folder in agrieye_output: boll_crops or boll_candidates")
+DIR = Path(__file__).resolve().parent / "agrieye_output" / _ap.parse_args().dir
 UNSORTED = DIR / "unsorted"
+CANDIDATES = DIR.name == "boll_candidates"
 COLS, ROWS, T = 6, 5, 170
 CYCLE = ["closed", "open", "not_boll", "skip"]
 COLOR = {"open": "#ffffff", "closed": "#ff4fd0", "not_boll": "#ff3b3b", "skip": "#777777"}
@@ -36,7 +41,7 @@ DEFAULT = {"open_boll": "open", "flower": "closed", "closed_boll": "closed"}
 class Grid:
     def __init__(self, root):
         self.root = root
-        root.title("AgriEYE boll grid sorter")
+        root.title("AgriEYE boll grid sorter - MISSED BOLL CANDIDATES" if CANDIDATES else "AgriEYE boll grid sorter")
         root.configure(bg="#1e1e1e")
         with open(DIR / "manifest.csv", encoding="utf-8") as fh:
             self.meta = {r["crop"]: r for r in csv.DictReader(fh)}
@@ -76,7 +81,9 @@ class Grid:
             c.create_image(T // 2, T // 2, image=ph)
             self.draw(i)
         k = self.counts()
-        group = {"open_boll": 'SAM said "open"', "flower": 'SAM said "flower"', "closed_boll": 'SAM said "closed"'}
+        group = ({"open_boll": 'POSSIBLY MISSED boll - detector says "open"', "closed_boll": 'POSSIBLY MISSED boll - detector says "closed"'}
+                 if CANDIDATES else
+                 {"open_boll": 'SAM said "open"', "flower": 'SAM said "flower"', "closed_boll": 'SAM said "closed"'})
         g = group[self.meta[self.page[0]]["sam_label"]] if self.page else "all done"
         self.head.configure(text=(
             f"{g}  |  left: {len(todo)}   open {k['open']}  closed {k['closed']}  not_boll {k['not_boll']}\n"

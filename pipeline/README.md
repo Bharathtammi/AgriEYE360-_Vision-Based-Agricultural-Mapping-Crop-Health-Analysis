@@ -362,6 +362,7 @@ Clear open / closed boll pictures (cyan solid = open, magenta dashed = closed):
 | `training_graphs.py` | Roboflow-style training graphs (performance + losses per epoch) for L1 and L2 from their training logs |
 | `train_guard.py` | After every training run: keep the better of new vs current model, log it, redraw the graphs |
 | `train_boll_detector.py` | Local YOLO11n boll detector (train / test on the 18 test views, same scoring as R2) |
+| `find_missed_bolls.py` | Suggests bolls missing from the labels (detector finds, no label, not rejected before) for the grid sorter (`sort_bolls_grid.py --dir boll_candidates`); accepted ones are added by `export_roboflow_bolls.py`. Test views are left out to keep the detector test fair |
 | `boll_classify_roboflow.py` | Classifies every boll box with the Roboflow model for `analyze` |
 | `sam3_segment_field.py` | SAM 3 leaf segmentation of the field (`--classify` adds YOLO disease) |
 | `vlm_segment.py` | SAM 3 text-prompt segmentation of any image |

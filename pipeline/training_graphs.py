@@ -169,12 +169,12 @@ def l2(name="disease_cls", label="L2 disease classifier", file="L2_disease_class
 BOLL = ROOT / "agrieye_output" / "boll_detector"
 
 
-def boll():
-    """Local boll detector (train_boll_detector.py), once trained."""
+def boll(run="boll_det"):
+    """Local boll detector (train_boll_detector.py): one graph per run folder."""
     global MODELS
     keep, MODELS = MODELS, BOLL
     try:
-        rows, a = load("boll_det"), args("boll_det")
+        rows, a = load(run), args(run)
     finally:
         MODELS = keep
     e = [r["epoch"] for r in rows]
@@ -182,10 +182,11 @@ def boll():
     bi = max(range(len(rows)), key=lambda i: m50[i]); best = rows[bi]
     data = ROOT / "roboflow_export" / "1_cotton_boll_detection"
     fig, top, bottom, path = figure(
-        f"Local boll detector (YOLO11n): mAP50 {m50[bi]:.1f}% at epoch {best['epoch']:.0f} of {len(rows)}",
+        f"Local boll detector (YOLO11n, {len(rows)} epochs{', kept' if run == 'boll_det' else ', not kept'}): "
+        f"mAP50 {m50[bi]:.1f}% at epoch {best['epoch']:.0f}",
         f"Validation on {count(data / 'valid' / 'images')} views · trained on {count(data / 'train' / 'images')} views "
         f"(open / closed bolls) · batch {a.get('batch', '?')} · image size {a.get('imgsz', '?')} · {hours(rows[-1]['time'])} on CPU",
-        OUT / "boll_detector_training.png")
+        OUT / ("boll_detector_training.png" if run == "boll_det" else f"boll_detector_training_{len(rows)}ep.png"))
     top.plot(e, m50, color=ACCENT, linewidth=2.4, label="mAP50")
     top.plot(e, m5095, color=LIGHT, linewidth=2, linestyle="--", label="mAP50-95")
     top.annotate(f"{m50[bi]:.1f}%", (e[bi], m50[bi]), xytext=(0, 9), textcoords="offset points", ha="center",
@@ -197,7 +198,7 @@ def boll():
     loss_panel(bottom[0], rows, "train/box_loss", "val/box_loss", "Box loss", best["epoch"])
     loss_panel(bottom[1], rows, "train/cls_loss", "val/cls_loss", "Class loss", best["epoch"])
     loss_panel(bottom[2], rows, "train/dfl_loss", "val/dfl_loss", "Distribution focal loss", best["epoch"])
-    save(fig, path, "Source: agrieye_output/boll_detector/boll_det/results.csv (Ultralytics log, one row per epoch). "
+    save(fig, path, f"Source: agrieye_output/boll_detector/{run}/results.csv (Ultralytics log, one row per epoch). "
                     "The R2 line is its score on the 18 test views (this chart: 28 validation views).")
 
 
@@ -274,6 +275,9 @@ if __name__ == "__main__":
     l1(); l2()
     if (BOLL / "boll_det" / "results.csv").exists():
         boll()
+        for d in sorted(BOLL.glob("boll_det_rejected_*")) + sorted(BOLL.glob("boll_det_previous_*")):
+            if (d / "results.csv").exists():
+                boll(d.name)
         boll_compare()
     if (MODELS / "disease_cls_v3" / "results.csv").exists():          # v3 (field + public leaves), once trained
         l2("disease_cls_v3", "Disease classifier v3", "L2_v3_disease_classifier_training.png")

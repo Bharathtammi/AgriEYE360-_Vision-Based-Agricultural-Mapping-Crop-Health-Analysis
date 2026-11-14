@@ -91,9 +91,27 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--all", action="store_true")
     ap.add_argument("--plant")
+    ap.add_argument("--pov4", action="store_true", help="one sheet per photo: its 4 views N E S W, all labels drawn")
     a = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     labs = sorted(DATA.glob("*/labels/*.txt"))
+    if a.pov4:
+        order = {"N": 0, "E": 1, "S": 2, "W": 3}
+        photos = {}
+        for l in labs:
+            photos.setdefault(l.stem.rsplit("_", 1)[0], []).append(l)
+        dst = OUT / "pov4"
+        dst.mkdir(parents=True, exist_ok=True)
+        tot_o = tot_c = 0
+        for key, ls in sorted(photos.items()):
+            ls.sort(key=lambda l: order.get(l.stem[-1], 9))
+            drawn = [draw(l) for l in ls]
+            no, nc = sum(d[1] for d in drawn), sum(d[2] for d in drawn)
+            tot_o += no; tot_c += nc
+            sheet([d[0] for d in drawn], 2, dst / f"{key}_4pov.jpg", T=900)
+            print(f"{key}: open {no}, closed {nc}  ({ls[0].parent.parent.name})")
+        print(f"\n{len(photos)} photos, open {tot_o}, closed {tot_c}\nFiles: {dst}  (one sheet per photo: N E / S W)")
+        return
     if a.plant:
         labs = [l for l in labs if l.stem.startswith(a.plant + "_")]
         # one row per visit, the 4 views N E S W

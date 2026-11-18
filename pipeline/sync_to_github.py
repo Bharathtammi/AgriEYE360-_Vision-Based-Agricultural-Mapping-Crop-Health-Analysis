@@ -57,7 +57,7 @@ TREES = [
     ("sample_results", "data/sample_results"),
 ]
 # inside the TREES: never copied (photo copies, training tiles, backups, unfinished runs) - keeps the repo small
-EXCLUDE_DIRS = {"pov_all", "variants", "img", "cv", "clean_w"}                 # any folder with this name
+EXCLUDE_DIRS = {"pov_all", "variants", "img", "cv"}                 # any folder with this name
 EXCLUDE_PREFIX = ("data_big_before_rebuild_", "data_clean_before_", "labels_before_")
 EXCLUDE_NAMES = {"last.pt", "sam3_with_duplicates_backup.jsonl"}
 DATASET_PARENTS = {"pov_all_labels", "boll_detector"}                         # their images/ folders = photo copies
@@ -70,6 +70,14 @@ def excluded(rel):
     if parts[0] == "pov_all_labels" and "previews" in parts[:-1]:              # 1 drawn preview per view (mostly copies)
         return True
     return "images" in parts[:-1] and parts[0] in DATASET_PARENTS
+
+
+def unfinished_run(f):
+    """A training run (runs/<name>/) is uploaded only when it FINISHED: train_visit.py writes experiment.json at the end."""
+    for d in f.parents:
+        if d.parent.name == "runs":
+            return not (d / "experiment.json").exists()
+    return False
 
 
 KEY = re.compile(r"""(api_key|apikey|token|secret|password)\s*[=:]\s*["'][A-Za-z0-9_\-]{12,}["']""", re.I)
@@ -108,7 +116,7 @@ def copy_all():
             copy_one(f, REPO / (dst + f.name if dst.endswith("/") else dst), copied)
     for src, dst in TREES:
         for f in sorted((SRC / src).rglob("*")):
-            if excluded(f.relative_to(SRC / src)):
+            if excluded(f.relative_to(SRC / src)) or unfinished_run(f):
                 continue
             copy_one(f, REPO / dst / f.relative_to(SRC / src), copied)
     return copied

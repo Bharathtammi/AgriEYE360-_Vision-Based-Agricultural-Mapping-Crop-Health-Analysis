@@ -4,6 +4,8 @@ Copy the current AgriEYE 360 work into the GitHub repo clone and commit it.
   python sync_to_github.py            # copy + show what changed (no commit)
   python sync_to_github.py --commit   # copy + commit (local only)
   python sync_to_github.py --push     # copy + commit + push to GitHub
+  python sync_to_github.py --push --tag v0.5 --note "clean_w model"   # ... and mark this commit as a named VERSION
+                                      #     (tag + line in CHANGELOG.md; go back any time: git checkout v0.5)
 
 Copied: the files listed below (code, docs, main results, the two small trained models) and ALL workflow
 outputs (agrieye_output -> data/agrieye_output, sample_results -> data/sample_results).
@@ -116,12 +118,21 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--commit", action="store_true")
     ap.add_argument("--push", action="store_true")
+    ap.add_argument("--tag", help="name this version, e.g. v0.5 (needs --commit or --push)")
+    ap.add_argument("--note", default="", help="one line for CHANGELOG.md with --tag")
     ap.add_argument("-m", "--message", default=f"Update AgriEYE 360 pipeline and results ({date.today():%d %b %Y})")
     a = ap.parse_args()
     if not (REPO / ".git").exists():
         sys.exit(f"Repo clone not found: {REPO}")
+    if a.tag and git("tag", "-l", a.tag):
+        sys.exit(f"Version {a.tag} already exists - pick a new name.")
     copied = copy_all()
-    git("add", "pipeline", "models", "results", "data", ".gitignore", "README.md")
+    if a.tag and (a.commit or a.push):
+        cl = REPO / "CHANGELOG.md"
+        old = cl.read_text(encoding="utf-8") if cl.exists() else "# Changelog - named versions\n\n"
+        head, _, rest = old.partition("\n\n")              # newest version goes on top, under the title
+        cl.write_text(f"{head}\n\n- **{a.tag}** ({date.today():%d %b %Y}): {a.note or a.message}\n{rest}", encoding="utf-8")
+    git("add", "pipeline", "models", "results", "data", ".gitignore", "README.md", *(["CHANGELOG.md"] if (REPO / "CHANGELOG.md").exists() else []))
     status = git("status", "--short")
     print(f"Copied/checked {len(copied)} files into {REPO}")
     lines = status.splitlines()
@@ -134,10 +145,15 @@ def main():
     if status:
         git("commit", "-m", a.message)
         print(git("log", "--oneline", "-1"))
+    if a.tag and (a.commit or a.push):
+        git("tag", "-a", a.tag, "-m", a.note or a.message)
+        print(f"Version {a.tag} = {git('rev-parse', '--short', 'HEAD')}")
     if a.push:
         git("fetch", "origin", check=False)
         ahead = git("rev-list", "--count", "@{u}..HEAD", check=False) if git(
             "rev-parse", "--abbrev-ref", "@{u}", check=False) else "1"
+        if a.tag:
+            subprocess.run(["git", "-C", str(REPO), "push", "origin", a.tag])
         if ahead in ("", "0"):
             print("GitHub is already up to date."); return
         print(f"Pushing {ahead} commit(s) to GitHub ...")

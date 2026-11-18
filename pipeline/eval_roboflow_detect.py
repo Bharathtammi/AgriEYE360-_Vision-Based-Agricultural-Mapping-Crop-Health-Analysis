@@ -77,7 +77,7 @@ def parse(resp, dx=0, dy=0):
     preds = resp.get("predictions", []) if isinstance(resp, dict) else []
     out = []
     for p in preds:
-        cls = p.get("class")
+        cls = str(p.get("class", "")).strip().lower().replace(" ", "_").replace("-", "_")   # "open boll" -> open_boll
         if cls not in NAMES:
             continue
         x, y, w, h = p["x"] + dx, p["y"] + dy, p["width"], p["height"]

@@ -1,0 +1,12 @@
+One-visit development: visit 20260804 - scored on its TEST photos (valid in brackets below)
+                      -- 2 classes (open/closed) --       ---- 1 class (boll) ----
+experiment              mAP50 >=24px    open  closed    mAP50 >=24px       P       R
+tile80                  44.0%   48.1%   32.2%   55.8%    53.1%   57.9%   78.0%   23.4%
+
+VALID photo (used by training to pick the best epoch):
+                      -- 2 classes (open/closed) --       ---- 1 class (boll) ----
+experiment              mAP50 >=24px    open  closed    mAP50 >=24px       P       R
+tile80                  57.7%   60.3%   51.0%   64.4%    63.1%   66.1%   87.0%   27.5%
+
+P / R at confidence 0.5, bolls >= 24 px. Test = 28 pictures, valid = 28.
+A boll counts as found at overlap (IoU) >= 0.5. Hidden/unclear bolls (ignore/ folder) count neither way.

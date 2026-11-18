@@ -1,0 +1,13 @@
+Label review applied (build_label_review.py). Rule: hidden/unclear = less than about half visible, blurred,
+dark against the sky, or open/closed cannot be told -> grey + unlabelled (train/valid), ignore zone (test).
+
+                                           train   valid    test
+final closed_boll                           1998     550     482
+final hidden (grey / ignore)                 396     162     252
+final open_boll                              355      70      62
+label -> hidden/unclear                      351     132     220
+model suggestion -> closed boll added         22      15       7
+model suggestion -> hidden boll               45      30      32
+model suggestion -> not a boll                98      30      39
+model suggestion -> open boll added            1       4      11
+pictures reviewed                             84      28      28

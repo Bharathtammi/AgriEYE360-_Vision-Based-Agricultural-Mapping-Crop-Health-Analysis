@@ -1,0 +1,141 @@
+view,date,fold,split,group,labels,old_hand_split,copies
+P01_2026-07-31_20260731_080101_E.jpg,20260731,2,train,20,hand-checked,valid,2
+P01_2026-07-31_20260731_080101_N.jpg,20260731,2,train,20,hand-checked,train,2
+P01_2026-07-31_20260731_080101_S.jpg,20260731,2,train,20,hand-checked,train,2
+P01_2026-07-31_20260731_080101_W.jpg,20260731,2,train,20,hand-checked,valid,2
+P01_2026-08-04_20260804_170758_E.jpg,20260804,3,train,412,hand-checked,train,17
+P01_2026-08-04_20260804_170758_N.jpg,20260804,3,train,412,hand-checked,train,17
+P01_2026-08-04_20260804_170758_S.jpg,20260804,3,train,412,hand-checked,train,17
+P01_2026-08-04_20260804_170758_W.jpg,20260804,3,train,412,hand-checked,train,17
+P01_2026-08-06_20260806_123246_E.jpg,20260806,4,train,936,hand-checked,train,15
+P01_2026-08-06_20260806_123246_N.jpg,20260806,4,train,936,hand-checked,train,15
+P01_2026-08-06_20260806_123246_S.jpg,20260806,4,train,936,hand-checked,train,15
+P01_2026-08-06_20260806_123246_W.jpg,20260806,4,train,936,hand-checked,train,15
+P02_2026-07-31_20260731_080717_E.jpg,20260731,1,valid,40,hand-checked,valid,10
+P02_2026-07-31_20260731_080717_N.jpg,20260731,1,valid,40,hand-checked,train,10
+P02_2026-07-31_20260731_080717_S.jpg,20260731,1,valid,40,hand-checked,train,10
+P02_2026-07-31_20260731_080717_W.jpg,20260731,1,valid,40,hand-checked,train,10
+P02_2026-08-04_20260804_172113_E.jpg,20260804,4,train,732,hand-checked,train,15
+P02_2026-08-04_20260804_172113_N.jpg,20260804,4,train,732,hand-checked,train,15
+P02_2026-08-04_20260804_172113_S.jpg,20260804,4,train,732,hand-checked,train,15
+P02_2026-08-04_20260804_172113_W.jpg,20260804,4,train,732,hand-checked,valid,15
+P02_2026-08-06_20260806_124634_E.jpg,20260806,0,test,1324,hand-checked,test,21
+P02_2026-08-06_20260806_124634_N.jpg,20260806,0,test,1324,hand-checked,valid,21
+P02_2026-08-06_20260806_124634_S.jpg,20260806,0,test,1324,hand-checked,valid,21
+P02_2026-08-06_20260806_124634_W.jpg,20260806,0,test,1324,hand-checked,train,21
+P02_2026-08-20_20260820_141335_E.jpg,20260820,0,test,1424,hand-checked,valid,2
+P02_2026-08-20_20260820_141335_N.jpg,20260820,0,test,1424,hand-checked,train,2
+P02_2026-08-20_20260820_141335_S.jpg,20260820,0,test,1424,hand-checked,test,2
+P02_2026-08-20_20260820_141335_W.jpg,20260820,0,test,1424,hand-checked,train,2
+P03_2026-07-31_20260731_080244_E.jpg,20260731,0,test,24,hand-checked,train,2
+P03_2026-07-31_20260731_080244_N.jpg,20260731,0,test,24,hand-checked,train,2
+P03_2026-07-31_20260731_080244_S.jpg,20260731,0,test,24,hand-checked,train,2
+P03_2026-07-31_20260731_080244_W.jpg,20260731,0,test,24,hand-checked,train,2
+P03_2026-08-04_20260804_171140_E.jpg,20260804,1,valid,476,hand-checked,valid,13
+P03_2026-08-04_20260804_171140_N.jpg,20260804,1,valid,476,hand-checked,train,13
+P03_2026-08-04_20260804_171140_S.jpg,20260804,1,valid,476,hand-checked,train,13
+P03_2026-08-04_20260804_171140_W.jpg,20260804,1,valid,476,hand-checked,train,13
+P03_2026-08-20_20260820_140049_E.jpg,20260820,2,train,1404,hand-checked,valid,2
+P03_2026-08-20_20260820_140049_N.jpg,20260820,2,train,1404,hand-checked,test,2
+P03_2026-08-20_20260820_140049_S.jpg,20260820,2,train,1404,hand-checked,train,2
+P03_2026-08-20_20260820_140049_W.jpg,20260820,2,train,1404,hand-checked,train,2
+P04_2026-07-31_20260731_080929_E.jpg,20260731,1,valid,76,hand-checked,train,16
+P04_2026-07-31_20260731_080929_N.jpg,20260731,1,valid,76,hand-checked,train,16
+P04_2026-07-31_20260731_080929_S.jpg,20260731,1,valid,76,hand-checked,valid,16
+P04_2026-07-31_20260731_080929_W.jpg,20260731,1,valid,76,hand-checked,train,16
+P04_2026-08-06_20260806_123451_E.jpg,20260806,3,train,992,hand-checked,train,22
+P04_2026-08-06_20260806_123451_N.jpg,20260806,3,train,992,hand-checked,valid,22
+P04_2026-08-06_20260806_123451_S.jpg,20260806,3,train,992,hand-checked,train,22
+P04_2026-08-06_20260806_123451_W.jpg,20260806,3,train,992,hand-checked,train,22
+P05_2026-08-04_20260804_172308_E.jpg,20260804,0,test,788,hand-checked,train,17
+P05_2026-08-04_20260804_172308_N.jpg,20260804,0,test,788,hand-checked,train,17
+P05_2026-08-04_20260804_172308_S.jpg,20260804,0,test,788,hand-checked,train,17
+P05_2026-08-04_20260804_172308_W.jpg,20260804,0,test,788,hand-checked,test,17
+P06_2026-07-31_20260731_080344_E.jpg,20260731,0,test,28,hand-checked,train,2
+P06_2026-07-31_20260731_080344_N.jpg,20260731,0,test,28,hand-checked,valid,2
+P06_2026-07-31_20260731_080344_S.jpg,20260731,0,test,28,hand-checked,valid,2
+P06_2026-07-31_20260731_080344_W.jpg,20260731,0,test,28,hand-checked,train,2
+P06_2026-08-04_20260804_171918_E.jpg,20260804,4,train,676,hand-checked,test,16
+P06_2026-08-04_20260804_171918_N.jpg,20260804,4,train,676,hand-checked,train,16
+P06_2026-08-04_20260804_171918_S.jpg,20260804,4,train,676,hand-checked,train,16
+P06_2026-08-04_20260804_171918_W.jpg,20260804,4,train,676,hand-checked,train,16
+P06_2026-08-20_20260820_141137_E.jpg,20260820,1,valid,1420,hand-checked,train,2
+P06_2026-08-20_20260820_141137_N.jpg,20260820,1,valid,1420,hand-checked,train,2
+P06_2026-08-20_20260820_141137_S.jpg,20260820,1,valid,1420,hand-checked,train,2
+P06_2026-08-20_20260820_141137_W.jpg,20260820,1,valid,1420,hand-checked,train,2
+P07_2026-08-04_20260804_172530_E.jpg,20260804,2,train,852,hand-checked,test,23
+P07_2026-08-04_20260804_172530_N.jpg,20260804,2,train,852,hand-checked,valid,23
+P07_2026-08-04_20260804_172530_S.jpg,20260804,2,train,852,hand-checked,valid,23
+P07_2026-08-04_20260804_172530_W.jpg,20260804,2,train,852,hand-checked,test,23
+P08_2026-07-31_20260731_081249_E.jpg,20260731,3,train,136,hand-checked,train,39
+P08_2026-07-31_20260731_081249_N.jpg,20260731,3,train,136,hand-checked,train,39
+P08_2026-07-31_20260731_081249_S.jpg,20260731,3,train,136,hand-checked,train,39
+P08_2026-07-31_20260731_081249_W.jpg,20260731,3,train,136,hand-checked,train,39
+P09_2026-07-31_20260731_080450_E.jpg,20260731,4,train,32,hand-checked,train,2
+P09_2026-07-31_20260731_080450_N.jpg,20260731,4,train,32,hand-checked,train,2
+P09_2026-07-31_20260731_080450_S.jpg,20260731,4,train,32,hand-checked,train,2
+P09_2026-07-31_20260731_080450_W.jpg,20260731,4,train,32,hand-checked,valid,2
+P09_2026-08-04_20260804_171515_E.jpg,20260804,1,valid,568,hand-checked,train,15
+P09_2026-08-04_20260804_171515_N.jpg,20260804,1,valid,568,hand-checked,test,15
+P09_2026-08-04_20260804_171515_S.jpg,20260804,1,valid,568,hand-checked,valid,15
+P09_2026-08-04_20260804_171515_W.jpg,20260804,1,valid,568,hand-checked,train,15
+P09_2026-08-06_20260806_123819_E.jpg,20260806,1,valid,1072,hand-checked,train,20
+P09_2026-08-06_20260806_123819_N.jpg,20260806,1,valid,1072,hand-checked,test,20
+P09_2026-08-06_20260806_123819_S.jpg,20260806,1,valid,1072,hand-checked,train,20
+P09_2026-08-06_20260806_123819_W.jpg,20260806,1,valid,1072,hand-checked,train,20
+P09_2026-08-20_20260820_140400_E.jpg,20260820,4,train,1408,hand-checked,valid,2
+P09_2026-08-20_20260820_140400_N.jpg,20260820,4,train,1408,hand-checked,train,2
+P09_2026-08-20_20260820_140400_S.jpg,20260820,4,train,1408,hand-checked,train,2
+P09_2026-08-20_20260820_140400_W.jpg,20260820,4,train,1408,hand-checked,test,2
+P10_2026-08-04_20260804_171702_E.jpg,20260804,0,test,624,hand-checked,train,14
+P10_2026-08-04_20260804_171702_N.jpg,20260804,0,test,624,hand-checked,train,14
+P10_2026-08-04_20260804_171702_S.jpg,20260804,0,test,624,hand-checked,train,14
+P10_2026-08-04_20260804_171702_W.jpg,20260804,0,test,624,hand-checked,train,14
+P10_2026-08-06_20260806_124039_E.jpg,20260806,2,train,1148,hand-checked,train,27
+P10_2026-08-06_20260806_124039_N.jpg,20260806,2,train,1148,hand-checked,test,27
+P10_2026-08-06_20260806_124039_S.jpg,20260806,2,train,1148,hand-checked,train,27
+P10_2026-08-06_20260806_124039_W.jpg,20260806,2,train,1148,hand-checked,train,27
+P10_2026-08-06_20260806_124422_N.jpg,20260806,3,train,1252,hand-checked,test,20
+P10_2026-08-06_20260806_124422_W.jpg,20260806,3,train,1252,hand-checked,train,20
+P10_2026-08-20_20260820_140648_E.jpg,20260820,3,train,1412,hand-checked,train,2
+P10_2026-08-20_20260820_140648_N.jpg,20260820,3,train,1412,hand-checked,train,2
+P10_2026-08-20_20260820_140648_S.jpg,20260820,3,train,1412,hand-checked,train,2
+P10_2026-08-20_20260820_140648_W.jpg,20260820,3,train,1412,hand-checked,train,2
+P11_2026-07-31_20260731_081730_E.jpg,20260731,3,train,288,hand-checked,train,32
+P11_2026-07-31_20260731_081730_N.jpg,20260731,3,train,288,hand-checked,valid,32
+P11_2026-07-31_20260731_081730_S.jpg,20260731,3,train,288,hand-checked,train,32
+P11_2026-07-31_20260731_081730_W.jpg,20260731,3,train,288,hand-checked,train,32
+P12_2026-07-31_20260731_080555_E.jpg,20260731,2,train,36,hand-checked,valid,2
+P12_2026-07-31_20260731_080555_N.jpg,20260731,2,train,36,hand-checked,train,2
+P12_2026-07-31_20260731_080555_S.jpg,20260731,2,train,36,hand-checked,test,2
+P12_2026-07-31_20260731_080555_W.jpg,20260731,2,train,36,hand-checked,train,2
+P12_2026-08-04_20260804_171324_E.jpg,20260804,2,train,524,hand-checked,test,12
+P12_2026-08-04_20260804_171324_N.jpg,20260804,2,train,524,hand-checked,train,12
+P12_2026-08-04_20260804_171324_S.jpg,20260804,2,train,524,hand-checked,train,12
+P12_2026-08-04_20260804_171324_W.jpg,20260804,2,train,524,hand-checked,valid,12
+P13_2026-08-06_20260806_124336_E.jpg,20260806,3,train,1252,hand-checked,valid,20
+P13_2026-08-06_20260806_124336_S.jpg,20260806,3,train,1252,hand-checked,valid,20
+P13_2026-08-20_20260820_140906_E.jpg,20260820,4,train,1416,hand-checked,test,2
+P13_2026-08-20_20260820_140906_N.jpg,20260820,4,train,1416,hand-checked,train,2
+P13_2026-08-20_20260820_140906_S.jpg,20260820,4,train,1416,hand-checked,train,2
+P13_2026-08-20_20260820_140906_W.jpg,20260820,4,train,1416,hand-checked,valid,2
+image_20260721_181742_E.jpg,20260721,0,test,0,"automatic (SAM 3 + R1, hand-reviewed)",,1
+image_20260721_181742_N.jpg,20260721,0,test,0,"automatic (SAM 3 + R1, hand-reviewed)",,1
+image_20260721_181742_S.jpg,20260721,0,test,0,"automatic (SAM 3 + R1, hand-reviewed)",,1
+image_20260721_181742_W.jpg,20260721,0,test,0,"automatic (SAM 3 + R1, hand-reviewed)",,1
+image_20260721_183127_E.jpg,20260721,1,valid,4,"automatic (SAM 3 + R1, hand-reviewed)",,1
+image_20260721_183127_N.jpg,20260721,1,valid,4,"automatic (SAM 3 + R1, hand-reviewed)",,1
+image_20260721_183127_S.jpg,20260721,1,valid,4,"automatic (SAM 3 + R1, hand-reviewed)",,1
+image_20260721_183127_W.jpg,20260721,1,valid,4,"automatic (SAM 3 + R1, hand-reviewed)",,1
+image_20260721_183409_E.jpg,20260721,2,train,8,"automatic (SAM 3 + R1, hand-reviewed)",,1
+image_20260721_183409_N.jpg,20260721,2,train,8,"automatic (SAM 3 + R1, hand-reviewed)",,1
+image_20260721_183409_S.jpg,20260721,2,train,8,"automatic (SAM 3 + R1, hand-reviewed)",,1
+image_20260721_183409_W.jpg,20260721,2,train,8,"automatic (SAM 3 + R1, hand-reviewed)",,1
+image_20260722_154955 - Copy_E.jpg,20260722,4,train,16,"automatic (SAM 3 + R1, hand-reviewed)",,1
+image_20260722_154955 - Copy_N.jpg,20260722,4,train,16,"automatic (SAM 3 + R1, hand-reviewed)",,1
+image_20260722_154955 - Copy_S.jpg,20260722,4,train,16,"automatic (SAM 3 + R1, hand-reviewed)",,1
+image_20260722_154955 - Copy_W.jpg,20260722,4,train,16,"automatic (SAM 3 + R1, hand-reviewed)",,1
+unassigned_2026-07-22_20260722_153906_E.jpg,20260722,3,train,12,hand-checked,train,2
+unassigned_2026-07-22_20260722_153906_N.jpg,20260722,3,train,12,hand-checked,train,2
+unassigned_2026-07-22_20260722_153906_S.jpg,20260722,3,train,12,hand-checked,valid,2
+unassigned_2026-07-22_20260722_153906_W.jpg,20260722,3,train,12,hand-checked,train,2

@@ -1,0 +1,11 @@
+FAIR boll detector comparison: 24 views no model trained on (6 photos; in Roboflow's validation split, not in the local training set)
+Answer keys: HAND = hand-checked (open 121, closed 771)   AUTO = SAM 3 + R1 (open 93, closed 542)
+Scoring A (duplicates merged at overlap 0.5; the same as the R2 / local test reports)
+
+model                                 key     mAP50  mAP50-95  open AP50  closed AP50      P      R
+local boll_det                        HAND    45.2%     22.6%      29.4%        61.0%  85.5%  44.3%
+local boll_det                        AUTO    56.7%     29.2%      38.2%        75.1%  84.6%  61.6%
+Roboflow                              HAND     0.2%      0.1%       0.0%         0.5%   0.0%   0.0%
+Roboflow                              AUTO     0.3%      0.1%       0.0%         0.7%   0.0%   0.0%
+
+P / R at confidence 0.5. HAND vs AUTO for the same model shows how much of a score comes from the answer key, not the model.

@@ -1,0 +1,1 @@
+{"epochs": 30, "imgsz": 1280, "model": "yolo11n.pt", "batch": 4, "single": false, "drop_small": 24}

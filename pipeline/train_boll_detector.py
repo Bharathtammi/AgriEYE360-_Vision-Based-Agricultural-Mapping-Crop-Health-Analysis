@@ -3,6 +3,7 @@ Local cotton boll DETECTOR (YOLO11n) trained on this laptop - the local counterp
 
   python train_boll_detector.py train [--epochs 30] [--imgsz 1280] [--batch 4]
   python train_boll_detector.py test          # only test the active model on the 18 test views
+  python train_boll_detector.py train --data big --epochs 25   # big set (all 4-direction views), same valid / test
 
 Data: roboflow_export/1_cotton_boll_detection (the same 140 hand-checked views and the same split as R2:
 train 94 / valid 28 / test 18; classes open_boll, closed_boll).
@@ -21,6 +22,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "roboflow_export" / "1_cotton_boll_detection"
+BIG = ROOT / "agrieye_output" / "boll_detector" / "data_big"      # build_boll_big_dataset.py: 1,092 train views, same valid/test
+TAG = ""
 HOME = ROOT / "agrieye_output" / "boll_detector"
 NAME = "boll_det"
 YAML = HOME / "data.yaml"
@@ -50,6 +53,7 @@ def train(a):
         hsv_v=0.0, hsv_s=0.3, hsv_h=0.01,                # no brightness change: clouds vs open cotton
         fliplr=0.5, degrees=10, mosaic=1.0,
         project=str(HOME), name=f"{NAME}_new", exist_ok=True, plots=True, verbose=False)
+    (left / "trained_on.txt").write_text("big" if TAG else "small", encoding="utf-8")   # for compare_boll_models.py
     import time
     t0 = time.time()
     train_guard.decide(NAME, "det", YAML, a.imgsz, models=HOME)
@@ -90,7 +94,10 @@ def test(imgsz=1280, run=None, active=True):
                       verbose=False, project=tmp, name="t", exist_ok=True)
     ub = u.box
     ep = a.get("epochs", "?")
-    lines = [f"Local YOLO11n boll detector ({ep} epochs, image size {a.get('imgsz', imgsz)}) on the 18 test views "
+    mark = run / "trained_on.txt"                        # the data THIS model was trained on (not the current run's)
+    big = mark.exists() and "big" in mark.read_text()
+    tag = "_big" if big else ""
+    lines = [f"Local YOLO11n boll detector{' (BIG training set)' if big else ''} ({ep} epochs, image size {a.get('imgsz', imgsz)}) on the 18 test views "
              f"never used in training   [{'ACTIVE model' if active else 'not kept (' + run.name + ')'}]", "",
              "A) Same scoring as Roboflow R2 (duplicate boxes merged at overlap 0.5):"] + rows + ["",
              "B) Ultralytics default scoring (overlap 0.7, as in the training stats):",
@@ -100,7 +107,7 @@ def test(imgsz=1280, run=None, active=True):
              f"open AP {R2['open_ap']}%  closed AP {R2['closed_ap']}%  precision {R2['P']}%  recall {R2['R']}%",
              "Two-step pipeline (SAM 3 finds, R1 judges): 97.7% open/closed on boll crops (a different task)."]
     TEST_OUT.mkdir(parents=True, exist_ok=True)
-    (TEST_OUT / f"report_{ep}ep.txt").write_text("\n".join(lines), encoding="utf-8")
+    (TEST_OUT / f"report_{ep}ep{tag}.txt").write_text("\n".join(lines), encoding="utf-8")
     if not active:
         print("\n".join(lines)); return
     (TEST_OUT / "report.txt").write_text("\n".join(lines), encoding="utf-8")
@@ -118,5 +125,8 @@ if __name__ == "__main__":
     ap.add_argument("--epochs", type=int, default=30)
     ap.add_argument("--imgsz", type=int, default=1280)
     ap.add_argument("--batch", type=int, default=4)
+    ap.add_argument("--data", choices=["small", "big"], default="small")
     a = ap.parse_args()
+    if a.data == "big":
+        DATA, TAG = BIG, "_big"
     train(a) if a.cmd == "train" else test(a.imgsz)

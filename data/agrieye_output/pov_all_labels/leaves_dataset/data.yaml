@@ -1,0 +1,6 @@
+path: F:/Project and completed courses/Agri EYE 360/agrieye_output/pov_all_labels/leaves_dataset
+train: images
+val: images
+# no split yet: see views.csv (group column) before training
+nc: 3
+names: ['healthy_leaf', 'diseased_leaf', 'small_leaf']

@@ -2,9 +2,9 @@ task: detect
 mode: train
 model: yolo11n.pt
 data: F:\Project and completed courses\Agri EYE 360\agrieye_output\boll_detector\data.yaml
-epochs: 30
+epochs: 25
 time: null
-patience: 30
+patience: 25
 batch: 4
 imgsz: 1280
 save: true

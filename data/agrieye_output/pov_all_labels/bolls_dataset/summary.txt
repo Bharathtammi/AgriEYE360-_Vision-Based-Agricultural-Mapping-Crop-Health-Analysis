@@ -1,0 +1,10 @@
+COTTON BOLL LABELS - all 4-direction views (SAM 3 boxes, R1 Roboflow classifier)
+
+date          views    open  closed  removed (not boll)
+2026-07-21       20       3     355                   3
+2026-07-22       16       8     380                   4
+2026-07-31      396     204    9713                   1
+2026-08-04      524     495   10407                  86
+2026-08-06      468     885    9141                  20
+2026-08-20      328    4995    2257                  96
+TOTAL          1752    6590   32253                 210

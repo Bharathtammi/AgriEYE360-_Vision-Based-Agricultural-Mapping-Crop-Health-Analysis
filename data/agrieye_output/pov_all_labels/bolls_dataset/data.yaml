@@ -1,0 +1,6 @@
+path: F:/Project and completed courses/Agri EYE 360/agrieye_output/pov_all_labels/bolls_dataset
+train: images
+val: images
+# no split yet: see views.csv (group column) before training
+nc: 2
+names: ['open_boll', 'closed_boll']

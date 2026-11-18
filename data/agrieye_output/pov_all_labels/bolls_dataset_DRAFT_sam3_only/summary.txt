@@ -1,0 +1,10 @@
+COTTON BOLL LABELS - all 4-direction views DRAFT: SAM 3 boxes and SAM 3 open/closed guess, NOT checked by R1
+
+date          views    open  closed  removed (not boll)
+2026-07-21       20      56     306                   0
+2026-07-22       16      56     336                   0
+2026-07-31      396    1250    8668                   0
+2026-08-04      524    1641    9362                   0
+2026-08-06      468    1787    8259                   0
+2026-08-20      328    4155    3211                   0
+TOTAL          1752    8945   30142                   0

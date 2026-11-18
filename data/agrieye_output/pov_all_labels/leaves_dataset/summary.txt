@@ -1,0 +1,12 @@
+LEAF LABELS - all 4-direction views (SAM 3 outlines, L2 disease classifier v2)
+
+date          views  healthy  diseased   small  % diseased
+2026-07-21       20       81       150     284       64.9%
+2026-07-22       16      372       146      90       28.2%
+2026-07-31      396     9938      2164    4774       17.9%
+2026-08-04      524    13832      3912    3635       22.0%
+2026-08-06      468    15060      2189    2705       12.7%
+2026-08-20      328     8869      3468    2328       28.1%
+TOTAL          1752    48152     12029   13816       20.0%
+
+% diseased = diseased / (healthy + diseased); small leaves are not judged.

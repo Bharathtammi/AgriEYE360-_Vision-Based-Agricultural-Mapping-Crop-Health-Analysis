@@ -1,0 +1,26 @@
+  20/439 photos, 80 new views
+  60/439 photos, 236 new views
+  80/439 photos, 316 new views
+  100/439 photos, 396 new views
+  120/439 photos, 476 new views
+  140/439 photos, 556 new views
+  160/439 photos, 636 new views
+  180/439 photos, 716 new views
+  200/439 photos, 796 new views
+  220/439 photos, 876 new views
+  240/439 photos, 956 new views
+  260/439 photos, 1036 new views
+  280/439 photos, 1116 new views
+  300/439 photos, 1196 new views
+  320/439 photos, 1276 new views
+  340/439 photos, 1356 new views
+  360/439 photos, 1436 new views
+  380/439 photos, 1516 new views
+  400/439 photos, 1596 new views
+  420/439 photos, 1676 new views
+  439/439 photos, 1752 new views
+
+439 files: 438 sliced into 4 views = 1752 views (81 are exact copies of another file)
+Not 360 (not sliced): image_20260731_081050.jpg
+Views per date: 2026-07-21: 20, 2026-07-22: 16, 2026-07-31: 396, 2026-08-04: 524, 2026-08-06: 468, 2026-08-20: 328
+Files: F:\Project and completed courses\Agri EYE 360\agrieye_output\pov_all

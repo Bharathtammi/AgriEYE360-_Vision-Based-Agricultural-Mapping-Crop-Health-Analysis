@@ -169,6 +169,11 @@ def l2(name="disease_cls", label="L2 disease classifier", file="L2_disease_class
 BOLL = ROOT / "agrieye_output" / "boll_detector"
 
 
+def is_big(run):
+    m = BOLL / run / "trained_on.txt"
+    return m.exists() and "big" in m.read_text()
+
+
 def boll(run="boll_det"):
     """Local boll detector (train_boll_detector.py): one graph per run folder."""
     global MODELS
@@ -180,13 +185,14 @@ def boll(run="boll_det"):
     e = [r["epoch"] for r in rows]
     m50, m5095 = [100 * r["metrics/mAP50(B)"] for r in rows], [100 * r["metrics/mAP50-95(B)"] for r in rows]
     bi = max(range(len(rows)), key=lambda i: m50[i]); best = rows[bi]
-    data = ROOT / "roboflow_export" / "1_cotton_boll_detection"
+    big = is_big(run)
+    data = BOLL / "data_big" if big else ROOT / "roboflow_export" / "1_cotton_boll_detection"
     fig, top, bottom, path = figure(
-        f"Local boll detector (YOLO11n, {len(rows)} epochs{', kept' if run == 'boll_det' else ', not kept'}): "
-        f"mAP50 {m50[bi]:.1f}% at epoch {best['epoch']:.0f}",
+        f"Local boll detector (YOLO11n, {len(rows)} epochs{', BIG set' if big else ''}{', kept' if run == 'boll_det' else ', not kept'}): "
+        f"top mAP50 {m50[bi]:.1f}% at epoch {best['epoch']:.0f}",
         f"Validation on {count(data / 'valid' / 'images')} views · trained on {count(data / 'train' / 'images')} views "
-        f"(open / closed bolls) · batch {a.get('batch', '?')} · image size {a.get('imgsz', '?')} · {hours(rows[-1]['time'])} on CPU",
-        OUT / ("boll_detector_training.png" if run == "boll_det" else f"boll_detector_training_{len(rows)}ep.png"))
+        f"({'automatic SAM 3 + R1 labels' if big else 'hand-checked'}) · batch {a.get('batch', '?')} · image size {a.get('imgsz', '?')} · {hours(rows[-1]['time'])} on CPU",
+        OUT / ("boll_detector_training.png" if run == "boll_det" else f"boll_detector_training_{len(rows)}ep{'_big' if big else ''}.png"))
     top.plot(e, m50, color=ACCENT, linewidth=2.4, label="mAP50")
     top.plot(e, m5095, color=LIGHT, linewidth=2, linestyle="--", label="mAP50-95")
     top.annotate(f"{m50[bi]:.1f}%", (e[bi], m50[bi]), xytext=(0, 9), textcoords="offset points", ha="center",
@@ -194,10 +200,15 @@ def boll(run="boll_det"):
     top.axhline(43.6, color=GREY, linewidth=1, linestyle="-.")
     top.text(e[0], 43.6, "  Roboflow R2 (test views): 43.6%", va="bottom", fontsize=8.5, color=QUIET)
     style(top, "Model performance (validation)", pct=True); top.set_ylim(0, max(max(m50), 43.6) * 1.32)
-    best_line(top, best["epoch"]); top.legend(frameon=False, fontsize=9.5, loc="lower right")
-    loss_panel(bottom[0], rows, "train/box_loss", "val/box_loss", "Box loss", best["epoch"])
-    loss_panel(bottom[1], rows, "train/cls_loss", "val/cls_loss", "Class loss", best["epoch"])
-    loss_panel(bottom[2], rows, "train/dfl_loss", "val/dfl_loss", "Distribution focal loss", best["epoch"])
+    # best.pt = the epoch with the best Ultralytics fitness (0.1 x mAP50 + 0.9 x mAP50-95), not the top mAP50
+    si = max(range(len(rows)), key=lambda i: 0.1 * m50[i] + 0.9 * m5095[i]); saved = rows[si]["epoch"]
+    best_line(top, saved); top.legend(frameon=False, fontsize=9.5, loc="lower right")
+    if si != bi:
+        top.annotate(f"saved model: mAP50 {m50[si]:.1f}%", (e[si], m50[si]), xytext=(0, -16), textcoords="offset points",
+                     ha="right", fontsize=8.5, color=QUIET)
+    loss_panel(bottom[0], rows, "train/box_loss", "val/box_loss", "Box loss", saved)
+    loss_panel(bottom[1], rows, "train/cls_loss", "val/cls_loss", "Class loss", saved)
+    loss_panel(bottom[2], rows, "train/dfl_loss", "val/dfl_loss", "Distribution focal loss", saved)
     save(fig, path, f"Source: agrieye_output/boll_detector/{run}/results.csv (Ultralytics log, one row per epoch). "
                     "The R2 line is its score on the 18 test views (this chart: 28 validation views).")
 
@@ -216,27 +227,31 @@ def boll_compare():
         finally:
             MODELS = keep
         ep = a.get("epochs", "?")
-        rep = ROOT / "sample_results" / "local_boll_detect_test" / f"report_{ep}ep.txt"
+        big = is_big(d.name)
+        rep = ROOT / "sample_results" / "local_boll_detect_test" / f"report_{ep}ep{'_big' if big else ''}.txt"
         ta = tb = None
         if rep.exists():
             t = rep.read_text(encoding="utf-8")
             m = re.search(r"A\).*?\n\s+mAP@50 ([\d.]+)%", t, re.S); ta = float(m.group(1)) if m else None
             m = re.search(r"B\).*?\n\s+mAP@50 ([\d.]+)%", t, re.S); tb = float(m.group(1)) if m else None
-        runs.append(dict(ep=int(ep), active=d.name == "boll_det", rows=rows, ta=ta, tb=tb))
+        runs.append(dict(ep=int(ep), active=d.name == "boll_det", rows=rows, ta=ta, tb=tb, big=big,
+                         name=f"{ep} ep" + (" BIG set" if big else "")))
     if len(runs) < 2:
         return
-    runs.sort(key=lambda r: r["ep"])
+    runs.sort(key=lambda r: (r["big"], r["ep"]))
     fig, (ax, bx) = plt.subplots(1, 2, figsize=(14, 5.6), dpi=140, gridspec_kw=dict(width_ratios=[1.5, 1]))
     act = next(r for r in runs if r["active"])
-    fig.text(0.05, 0.95, f"Boll detector: {act['ep']} epochs is best ({act['tb']:.1f}% test mAP50, default scoring)",
+    top_ = max(runs, key=lambda r: r["tb"] or 0)
+    fig.text(0.05, 0.95, f"Boll detector: best test score {top_['tb']:.1f}% ({top_['name']}, default scoring); "
+                         f"kept model: {act['name']}",
              fontsize=15, fontweight="bold", color=INK)
-    fig.text(0.05, 0.905, "YOLO11n, image size 1280, same 140 views and split for every run; "
-             "the kept model is chosen on validation only (differences under 1 point = tie)", fontsize=10, color=QUIET)
-    shades = ["#b8bec4", "#8a949e", "#5c6670"]
+    fig.text(0.05, 0.905, "YOLO11n, image size 1280; same 28 validation and 18 test views (hand-checked) for every run. "
+             "Small set: 94 hand-checked train views; BIG set: 1,092 views with automatic labels", fontsize=10, color=QUIET)
+    shades = ["#b8bec4", "#8a949e", "#5c6670", "#2f3740"]
     ends = []
     for i, r in enumerate(runs):
         e = [x["epoch"] for x in r["rows"]]; m = [100 * x["metrics/mAP50(B)"] for x in r["rows"]]
-        col, lw = (ACCENT, 2.6) if r["active"] else (shades[i % 3], 1.8)
+        col, lw = (ACCENT, 2.6) if r["active"] else (shades[i % 4], 1.8)
         ax.plot(e, m, color=col, linewidth=lw, zorder=3 if r["active"] else 2)
         ends.append((m[-1], e[-1], r, col))
     xmax = max(r["ep"] for r in runs)
@@ -245,7 +260,7 @@ def boll_compare():
         y = max(v, ys[-1] + 2.2) if ys else v
         ys.append(y)
         ax.plot([ex, lab_x - 0.3], [v, y], color=col, linewidth=0.8, linestyle=":")
-        ax.text(lab_x, y, f"{r['ep']} epochs" + (" (kept)" if r["active"] else ""), va="center", fontsize=9.5,
+        ax.text(lab_x, y, r["name"] + (" (kept)" if r["active"] else ""), va="center", fontsize=9.5,
                 color=INK if r["active"] else QUIET, fontweight="bold" if r["active"] else "normal")
     style(ax, "Validation mAP50 per epoch (28 views)", pct=True); ax.set_xlim(0, xmax + 10)
     x = range(len(runs)); w = 0.36
@@ -256,7 +271,7 @@ def boll_compare():
         for b_, v in zip(bars, vals):
             bx.text(b_.get_x() + b_.get_width() / 2, v + 0.8, f"{v:.1f}", ha="center", fontsize=9, color=INK)
     bx.axhline(43.6, color=GREY, linestyle="-.", linewidth=1, label="Roboflow R2: 43.6% (same scoring as R2)")
-    bx.set_xticks(list(x), [f"{r['ep']} epochs" for r in runs])
+    bx.set_xticks(list(x), [r["name"].replace(" BIG", "\nBIG") for r in runs])
     style(bx, "Test mAP50 (18 views)", pct=True); bx.set_xlabel(""); bx.set_ylim(0, 65); bx.set_xlim(-0.65, len(runs) - 0.35)
     bx.legend(frameon=False, fontsize=8.5, loc="upper left")
     fig.subplots_adjust(left=0.05, right=0.98, top=0.82, bottom=0.1, wspace=0.18)

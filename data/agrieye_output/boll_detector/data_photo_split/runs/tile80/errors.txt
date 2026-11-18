@@ -1,0 +1,34 @@
+Error analysis: agrieye_output\boll_detector\data_photo_split\runs\tile80 on 28 test pictures, bolls >= 24 px, confidence cut-off 0.25
+
+Hand-labelled bolls: 608
+  found, right class                 364   59.9%
+  found, WRONG class                   2    0.3%
+  found only below the cut-off        75   12.3%
+  box in the wrong place              63   10.4%
+  not found at all                   104   17.1%
+
+Model boxes that are not a (new) boll: 175
+  on nothing labelled                 76
+  duplicate box                        0
+  badly placed box on a boll          99
+
+Found (any class) by size:
+  24-40 px    155 / 287    54.0%
+  40-64 px    117 / 184    63.6%
+  64+ px       94 / 137    68.6%
+
+By class (what happened to each labelled boll):
+  open      70: box in the wrong place 13, found only below the cut-off 11, found, right class 29, not found at all 17
+  closed   538: box in the wrong place 50, found only below the cut-off 64, found, WRONG class 2, found, right class 335, not found at all 87
+
+Found (any class) by visit:
+  2026-07-31   159 / 220   72.3%
+  2026-08-04   102 / 183   55.7%
+  2026-08-06    51 / 99    51.5%
+  2026-08-20    40 / 76    52.6%
+  20260721    14 / 30    46.7%
+
+Bolls found only below 0.25: median confidence 0.15
+
+Sheets: F:\Project and completed courses\Agri EYE 360\agrieye_output\boll_detector\data_photo_split\runs\tile80\errors_missed.jpg, errors_false.jpg, errors_confused.jpg
+  yellow = hand label, cyan = model closed, pink = model open

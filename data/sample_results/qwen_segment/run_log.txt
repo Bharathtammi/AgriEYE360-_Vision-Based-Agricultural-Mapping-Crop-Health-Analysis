@@ -1,0 +1,12 @@
+Loading Qwen/Qwen2.5-VL-3B-Instruct (CPU, bfloat16) ...
+`torch_dtype` is deprecated! Use `dtype` instead!
+C:\Users\bhara\Downloads\.venv\Lib\site-packages\huggingface_hub\file_download.py:143: UserWarning: `huggingface_hub` cache-system uses symlinks by default to efficiently store duplicated files but your machine does not support them in C:\Users\bhara\.cache\huggingface\hub\models--Qwen--Qwen2.5-VL-3B-Instruct. Caching files will still work but in a degraded version that might require more space on your disk. This warning can be disabled by setting the `HF_HUB_DISABLE_SYMLINKS_WARNING` environment variable. For more details, see https://huggingface.co/docs/huggingface_hub/how-to-cache#limitations.
+To support symlinks on Windows, you either need to activate Developer Mode or to run Python as an administrator. In order to activate developer mode, see this article: https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development
+  warnings.warn(message)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [04:15<04:15, 255.88s/it]Fetching 2 files: 100%|██████████| 2/2 [04:18<00:00, 129.40s/it]Fetching 2 files: 100%|██████████| 2/2 [04:18<00:00, 129.40s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00, 17.59it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00, 17.59it/s]
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+P01_2026-07-31_20260731_080101_E.jpg: open cotton boll: 0, closed cotton boll: 0  (225 s)
+P01_2026-07-31_20260731_080101_N.jpg: open cotton boll: 0, closed cotton boll: 0  (231 s)
+Saved in F:\Project and completed courses\Agri EYE 360\sample_results\qwen_segment

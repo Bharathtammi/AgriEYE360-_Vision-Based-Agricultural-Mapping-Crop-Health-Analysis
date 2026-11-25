@@ -1,0 +1,27 @@
+Qwen2.5-VL-3B-Instruct, CPU, picture P02_2026-08-20_20260820_141335_N.jpg (3810x3810, Qwen saw it at 896x896).
+Hand labels on this picture: 10 open bolls, 9 closed bolls.
+
+--- Q1 (polygon / outline), "Segment every cotton boll ... trace its outline as a polygon of 8 to 16 points ... JSON" (112 s)
+[]
+
+--- Q2 (Qwen's native box format), "Locate every cotton boll in the image and output the bbox coordinates in JSON format." (121 s)
+```json
+[
+	{"bbox_2d": [30, 197, 814, 560], "label": "cotton boll"}
+]
+```
+
+--- Q3, "Locate every white fluffy cotton in the image and output the bbox coordinates in JSON format." (120 s)
+```json
+[
+	{"bbox_2d": [30, 197, 814, 560], "label": "white fluffy cotton"}
+]
+```
+
+--- Q4 (counting), "Describe this image. How many cotton bolls can you see, and how many are open (white fibre) vs closed (green/brown pods)?" (135 s)
+The image shows a cotton plant with both open and closed cotton bolls. There are several cotton bolls visible in the image.
+Some of them are open, revealing white fibrous material, while others are still closed, showing green or brown pods.
+To count the exact number of cotton bolls:
+- Open cotton bolls: 10
+- Closed cotton bolls: 15
+So, there are a total of 25 cotton bolls in the image.
